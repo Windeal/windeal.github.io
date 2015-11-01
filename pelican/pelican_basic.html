@@ -194,8 +194,7 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
     <hr/>
     <section class="comments" id="comments">
         <h2>Comments</h2>
-
-        <div id="duoshuo_thread"></div>
+        <div class="ds-thread" data-thread-key="<%= page.path %>" data-title="<%= page.title %>" data-url="<%= page.permalink %>"></div>
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var duoshuoQuery = {short_name:"windeal4github"};
