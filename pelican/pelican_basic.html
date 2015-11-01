@@ -212,7 +212,8 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
                 var dsq = document.createElement('script');
                 dsq.type = 'text/javascript';
                 dsq.async = true;
-                dsq.src = '//' + duoshuo_shortname + '.duoshuo.com/embed.js';
+                dsq.src =  (document.location.protocol == 'https:' ? 'https:' : 'http:')' + '//static.duoshuo.com/embed.js';
+                ds.charset = 'UTF-8';
                 (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
             })();
         </script>
