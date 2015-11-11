@@ -137,8 +137,6 @@ Windeal_Blog            </a>
 cd myBlog
 pelican-quickstart
 </pre></div>
-
-
 <p>在<code>pelican-quickstart</code>的时候，可能会有一些需要输入的信息，到时根据提示输入就可以了。
 　　前面的步骤完成后，我们会看到在myBlog目录下有很多文件和子目录。大概是这样的：</p>
 <div class="highlight"><pre>myblog/
@@ -150,8 +148,6 @@ pelican-quickstart
 ├── pelicanconf.py       # 主配置文件
 └── publishconf.py       # 发布时使用的配置文件
 </pre></div>
-
-
 <h2>第一遍文章</h2>
 <p>在content下用markdown语法编写一篇文章：</p>
 <div class="highlight"><pre><span class="n">Title</span><span class="o">:</span> <span class="n">pelican</span><span class="o">+</span><span class="n">github</span> <span class="n">pages</span><span class="err">搭建个人静态博客</span>
@@ -164,13 +160,11 @@ pelican-quickstart
 
 <span class="n">Hello</span> <span class="n">world</span><span class="o">.</span>
 </pre></div>
-
-
 <p>这样我们的博客的第一张site就差不多完成了。我们可以在本机localhost进行测试：
 　　先打开http服务器：
 <code>./develop_server.sh start</code>
 　　然后打开浏览器，输入localhost:8080,可以得到如下图所示：</p>
-<p><img alt="Paste_Image.png" src="/static/images/pelican/pelican_basic01.png" /></p>
+<p><img alt="Paste_Image.png" src="/static/images/pelican/pelican_basic01.png"/></p>
 <h1>部署到github上</h1>
 <p>关于部署到github pages上，可以参考官方文档 <a href="https://help.github.com/articles/creating-project-pages-manually/">Creating Project Pages manually</a> 不过我在自己做的时候有遇到一些问题，所以这里还是依照我最后成功的做法来描述。另外，在github搭建个人博客有两类，一类是直接大家搭建个人主页，每个github帐号只能创建一个，最后github pages的地址是username.github.io（这一类比较简单，网上的大部分教程也是针对这种情况的，本文不详细介绍。） 这里，我们主要介绍另一类情况，用一个repository搭建静态博客，最后得到的github pages地址是username.github.io/projectname ,例如我的是：<a href="http://windeal.github.io/myBlog/">http://windeal.github.io/myBlog/</a>.
 　　首先，登录github网站，在github上创建一个空仓库，如myBlog（这个就不用介绍了吧）。
@@ -178,31 +172,25 @@ pelican-quickstart
 <div class="highlight"><pre>cd output
 git init
 git add .
-git commit -m &quot;First commit&quot;
+git commit -m "First commit"
 </pre></div>
-
-
 <p>前面这些代码是git的一些简单操作，不明白的可以看下git的用法。
 　　我发现，在github上基于repository搭建静态博客时，需要建立在一个新的分支gh-pages，而不能使用master分支，具体原因现在我还没搞清楚。</p>
 <div class="highlight"><pre>git branch gh-pages            #创建本地分支
 git push origin gh-pages       #将本地分支push到github上
 git push -u origin gh-pages    #把我们前面生成的博客（output下面的文件）push到github上
 </pre></div>
-
-
 <p>到这里基本的部署就差不多完成了，我们看一下效果。</p>
-<p><img alt="初步效果图" src="/static/images/pelican/pelican_basic02.png" /></p>
+<p><img alt="初步效果图" src="/static/images/pelican/pelican_basic02.png"/></p>
 <p>发现跟本地效果不太一样。
 好像主题没有正常工作。
 这是因为本地的主题路径的前缀在push之后发生了变化。（比如我们一些图片在本地可能在image目录下，push之后可能就在 windeal.github.io/myBlog/image目录下，所以需要添加地址前缀。
 在pelicanconf.py中修改siteurl变量：
 <code>SITEURL = 'http://windeal.github.io/myBlog/'</code></p>
-<p><img alt="带主题的效果图" src="/static/images/pelican/pelican_basic03.png" /></p>
+<p><img alt="带主题的效果图" src="/static/images/pelican/pelican_basic03.png"/></p>
 <h1>插入本地图片</h1>
 <div class="highlight"><pre>pelican支持插入本地图片。
 </pre></div>
-
-
 <ol>
 <li>创建一个保存静态媒体的目录static， （该目录中可以存放我们的图片）</li>
 <li>在pelicanconf.py中添加一行<code>STATIC_PATHS = [u"static"]</code>， 指定静态目录。</li>
@@ -226,16 +214,6 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
                 <li>
                     下一篇:<a href="http://windeal.github.io/pelican/pelican_advance.html">
                         pelican 介绍——进阶篇
-                    </a>
-                </li>
-                <li>
-                    下一篇:<a href="http://windeal.github.io/others/nothing.html">
-                        个人简介
-                    </a>
-                </li>
-                <li>
-                    下一篇:<a href="http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html">
-                        无线MAC帧详解
                     </a>
                 </li>
         </ul>

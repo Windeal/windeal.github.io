@@ -126,17 +126,17 @@ Windeal_Blog            </a>
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <h1>802.11 MAC帧（无线MAC帧）</h1>
-<p><img alt="Paste_Image.png" src="/static/images/TCPIP/wirelessMacFrame01.png" /></p>
+<p><img alt="Paste_Image.png" src="/static/images/TCPIP/wirelessMacFrame01.png"/></p>
 <p>Mac帧由三个基本域组成：
 + <strong>Mac Header：</strong>包括帧控制（ Frame Control） 、 时长（ Duration） 、 地址（ Address） 等
 + <strong>Frame Body：</strong>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（ sub type） 决定。
 + <strong>FCS：</strong>    （ Frame Check Sequence， 帧校验序列） 用于保障帧数据完整性。
 　　我们主要关注Mac Header部门，我们来逐个分析下Mac Header中的字段</p>
 <h3>Frame Ctrl</h3>
-<p>Frame 含2Byte（16位），可以进一步分为以下子字段：
-<strong>(1) Protocol Version：</strong>
-　　代表802.11 MAC帧的版本号。 目前的值是0。
-<strong>(2) Type和Subtype: </strong>
+<p>Frame 含2Byte（16位），可以进一步分为以下子字段：</p>
+<p><strong>(1) Protocol Version：</strong>
+　　代表802.11 MAC帧的版本号。 目前的值是0。</p>
+<p><strong>(2) Type和Subtype: </strong>
 　　Type字段有00，01，10，11四种取值，将802.11中MAC帧分别划分为control、 data和management三种类型（Type=11保留）。
 　　Type与Subtype结合可以802.11MAC帧细分为以下类型（不全）。（本文后面对各个子类型进一步介绍）</p>
 <table>
@@ -245,16 +245,16 @@ Windeal_Blog            </a>
 </tbody>
 </table>
 <p><strong>(6) More Fragments: </strong>
-　　表明数据是否分片。 只支持data和management帧类型。
-<strong>(7) Retry: </strong>
-　　如果该值为1， 表明是重传包。
-<strong>(8) Power Management: </strong>
-　　表明发送该帧的STA处于活跃模式还是处于省电模式。
-<strong>(9) More Data: </strong>
-　　和省电模式有关。 AP会为那些处于省电模式下的STA缓冲一些数据帧， 而STA会定时查询是否有数据要接收。 该参数表示AP中还有缓冲的数据帧。 如果该值为0， 表明STA已经接收完数据帧了（ 下节将介绍省电模式相关的内容） 。
-<strong>(10): Protected Frame: </strong>
-　　表明数据是否加密。
-<strong>(11): Order: </strong>
+　　表明数据是否分片。 只支持data和management帧类型。</p>
+<p><strong>(7) Retry: </strong>
+　　如果该值为1， 表明是重传包。</p>
+<p><strong>(8) Power Management: </strong>
+　　表明发送该帧的STA处于活跃模式还是处于省电模式。</p>
+<p><strong>(9) More Data: </strong>
+　　和省电模式有关。 AP会为那些处于省电模式下的STA缓冲一些数据帧， 而STA会定时查询是否有数据要接收。 该参数表示AP中还有缓冲的数据帧。 如果该值为0， 表明STA已经接收完数据帧了（ 下节将介绍省电模式相关的内容） 。</p>
+<p><strong>(10): Protected Frame: </strong>
+　　表明数据是否加密。</p>
+<p><strong>(11): Order: </strong>
 　　 指明接收端必须按顺序处理该帧。</p>
 <h3>Duration/ID</h3>
 <p>Duration/ID域占2字节共16位， 其具体含义根据Type和Subtype的不同而变化， 不过大体就两种， 分别代表ID和Duration。</p>
@@ -438,16 +438,6 @@ Windeal_Blog            </a>
                 <li>
                     上一篇:<a href="http://windeal.github.io/others/nothing.html">
                         个人简介
-                    </a>
-                </li>
-                <li>
-                    上一篇:<a href="http://windeal.github.io/pelican/pelican_advance.html">
-                        pelican 介绍——进阶篇
-                    </a>
-                </li>
-                <li>
-                    上一篇:<a href="http://windeal.github.io/pelican/pelican_basic.html">
-                        pelican 介绍——基础篇
                     </a>
                 </li>
         </ul>
