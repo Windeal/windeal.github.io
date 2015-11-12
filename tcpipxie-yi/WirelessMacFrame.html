@@ -136,111 +136,26 @@ Windeal_Blog            </a>
 <p><strong>(2) Type和Subtype: </strong>
 　　Type字段有00，01，10，11四种取值，将802.11中MAC帧分别划分为control、 data和management三种类型（Type=11保留）。
 　　Type与Subtype结合可以802.11MAC帧细分为以下类型（不全）。（本文后面对各个子类型进一步介绍）</p>
-<table>
-<thead>
-<tr>
-<th align="center">Type（b3b2)</th>
-<th align="center">类型描述</th>
-<th align="center">Subtype(b7-b4)</th>
-<th align="center">子类型描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">00</td>
-<td align="center">Management</td>
-<td align="center">0000/1</td>
-<td align="center">Association Request/Response</td>
-</tr>
-<tr>
-<td align="center">00</td>
-<td align="center">Management</td>
-<td align="center">0100/1</td>
-<td align="center">Probe  Request/Response</td>
-</tr>
-<tr>
-<td align="center">00</td>
-<td align="center">Management</td>
-<td align="center">1000</td>
-<td align="center">Beacon帧</td>
-</tr>
-<tr>
-<td align="center">00</td>
-<td align="center">Management</td>
-<td align="center">1101</td>
-<td align="center">Action帧</td>
-</tr>
-<tr>
-<td align="center">01</td>
-<td align="center">Control</td>
-<td align="center">1010</td>
-<td align="center">PS-POLL帧，（省电轮询）</td>
-</tr>
-<tr>
-<td align="center">01</td>
-<td align="center">Control</td>
-<td align="center">1011</td>
-<td align="center">RTS</td>
-</tr>
-<tr>
-<td align="center">01</td>
-<td align="center">Control</td>
-<td align="center">1100</td>
-<td align="center">CTS</td>
-</tr>
-<tr>
-<td align="center">01</td>
-<td align="center">Control</td>
-<td align="center">1101</td>
-<td align="center">ACK</td>
-</tr>
-<tr>
-<td align="center">01</td>
-<td align="center">Data</td>
-<td align="center">0000</td>
-<td align="center">Data</td>
-</tr>
-<tr>
-<td align="center">11</td>
-<td align="center">保留</td>
-<td align="center">0000-1111</td>
-<td align="center">保留</td>
-</tr>
-</tbody>
-</table>
+<p>|Type（b3b2)           | 类型描述       |  Subtype(b7-b4)       |   子类型描述                  |
+|:--------------------:|:--------------:|:---------------------:|:-----------------------------:|
+|        00            |    Management  |        0000/1         | Association Request/Response  |
+|        00            |    Management  |        0100/1         | Probe  Request/Response       |
+|        00            |    Management  |        1000           |  Beacon帧                     |
+|        00            |    Management  |        1101           | Action帧                      |
+|        01            |    Control     |        1010           | PS-POLL帧，（省电轮询）       |
+|        01            |    Control     |        1011           |    RTS                        |
+|        01            |    Control     |        1100           |    CTS                        |
+|        01            |    Control     |        1101           |     ACK                       |
+|        01            |    Data        |         0000          |     Data                      |
+|        11            |    保留        |        0000-1111      |    保留                       |</p>
 <p><strong>(4)To DS 和 From DS: </strong>
 　　只用在数据类型的帧中。DS即Distribution System。 From DS和To Ds分别表明数据帧是否来自或去往DS。（这里的来自和去往分别对应最初的源地址，和最终的目的地址。如STA经DS发往另一个STA，则该帧既不来自DS，也不去往S，而是STA和STA之间的通信。）</p>
-<table>
-<thead>
-<tr>
-<th>To DS</th>
-<th>From DS</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>0</td>
-<td>即不来自DS也不去往DS, 即STA与STA之间的通信。也可能是管理帧或控制帧。</td>
-</tr>
-<tr>
-<td>0</td>
-<td>1</td>
-<td>表明该帧有DS 发往非DS， 一般是AP发给STA</td>
-</tr>
-<tr>
-<td>1</td>
-<td>0</td>
-<td>表明该帧由非DS发往DS，一般是STA发给AP</td>
-</tr>
-<tr>
-<td>1</td>
-<td>1</td>
-<td>该帧来自DS，又去往DS，其实就是只带AP与AP之间的数据帧</td>
-</tr>
-</tbody>
-</table>
+<p>| To DS |  From DS |                          含义                    |
+|--------|------------|-----------------------------------|
+|     0     |         0       | 即不来自DS也不去往DS, 即STA与STA之间的通信。也可能是管理帧或控制帧。 |
+|     0    |        1         |  表明该帧有DS 发往非DS， 一般是AP发给STA  |
+|     1      |        0        |表明该帧由非DS发往DS，一般是STA发给AP   |
+|    1    |        1            | 该帧来自DS，又去往DS，其实就是只带AP与AP之间的数据帧     |</p>
 <p><strong>(6) More Fragments: </strong>
 　　表明数据是否分片。 只支持data和management帧类型。</p>
 <p><strong>(7) Retry: </strong>
@@ -258,94 +173,20 @@ Windeal_Blog            </a>
 <h3 id="address-address1address4">Address (Address1~Address4)</h3>
 <p>首先，我们要知道，这里的Address以Mac地址的形式表示。网络传输中，Mac地址需要考虑字节序。Mac地址，字节序为Big-endian， 即最高字节在前。比特序为Little-endian， 即最低位在前。
 　　802.11 MAC帧头部分共包含四个Address域（一个可选）， 但规范中却有五种地址定义， 分别如下：</p>
-<table>
-<thead>
-<tr>
-<th>序号</th>
-<th>地址定义</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>BSSID</td>
-<td>在基础型BSS中， 它为AP① 的地址。 而在IBSS中则是一个本地唯一MAC地址。</td>
-</tr>
-<tr>
-<td>2</td>
-<td>目标地址    DA</td>
-<td>MAC帧的最终目的地址 ， 可以是单播或组播地址。</td>
-</tr>
-<tr>
-<td>3</td>
-<td>源地址        SA</td>
-<td>MAC帧的最初源地址，  一般情况下都是单播地址。</td>
-</tr>
-<tr>
-<td>4</td>
-<td>发送STA地址：TA</td>
-<td>一次经WM（无限媒介）传输的发送端地址，类似于路由中某一跳的起点</td>
-</tr>
-<tr>
-<td>5</td>
-<td>接收STA地址：RA</td>
-<td>一次经WM（无限媒介）传输的接收端地址，类似于路由中某一跳的终点</td>
-</tr>
-</tbody>
-</table>
+<p>| 序号|     地址定义     |       含义         |
+|-----|----------------|---------------|
+| 1    |   BSSID                        | 在基础型BSS中， 它为AP① 的地址。 而在IBSS中则是一个本地唯一MAC地址。 |
+| 2    |   目标地址    DA           | MAC帧的最终目的地址 ， 可以是单播或组播地址。 |
+| 3    |   源地址        SA           | MAC帧的最初源地址，  一般情况下都是单播地址。 |
+| 4    | 发送STA地址：TA        | 一次经WM（无限媒介）传输的发送端地址，类似于路由中某一跳的起点 |
+| 5    |   接收STA地址：RA      | 一次经WM（无限媒介）传输的接收端地址，类似于路由中某一跳的终点 |</p>
 <p>下面我们看下MAC首部4个地址域 与 规范中5中地址的对应关系：</p>
-<table>
-<thead>
-<tr>
-<th>To DS</th>
-<th>From Ds</th>
-<th>网络类型</th>
-<th>Adress 1（接收端）</th>
-<th>Address 2 （发送端）</th>
-<th>Address 3</th>
-<th>Address 4</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>0</td>
-<td>IBSS</td>
-<td>DA = RA</td>
-<td>TA = SA</td>
-<td>BSSID</td>
-<td>未使用</td>
-</tr>
-<tr>
-<td>0</td>
-<td>1</td>
-<td>From AP</td>
-<td>DA = RA</td>
-<td>TA = BSSID</td>
-<td>SA</td>
-<td>未使用</td>
-</tr>
-<tr>
-<td>1</td>
-<td>0</td>
-<td>To AP</td>
-<td>RA = BSSID</td>
-<td>TA = SA</td>
-<td>DA</td>
-<td>未使用</td>
-</tr>
-<tr>
-<td>1</td>
-<td>1</td>
-<td>AP to AP</td>
-<td>RA</td>
-<td>TA</td>
-<td>DA</td>
-<td>SA</td>
-</tr>
-</tbody>
-</table>
+<p>| To DS |  From Ds| 网络类型 | Adress 1（接收端） | Address 2 （发送端）| Address 3 | Address 4 |
+|--------|-----------|-----------|----------------------|------------------------|------------|------------|
+|   0       |       0       |  IBSS       |        DA = RA           | TA = SA                      |    BSSID    |  未使用    |
+|   0       |       1       |  From AP|        DA = RA           |  TA = BSSID               |      SA        |   未使用    |
+|   1       |       0       | To AP     |        RA = BSSID       | TA = SA                     |     DA        | 未使用    |
+|   1       |        1      |AP to AP |        RA                      |      TA                        |      DA        |    SA       |</p>
 <h3 id="seqctrl">SeqCtrl</h3>
 <p>此字段用来丢弃重复帧和重复分片。包含两个子字段：Fragment Number 和Sequence Number。
 + <strong>Fragment Number：</strong>用于分片帧
@@ -358,29 +199,15 @@ Windeal_Blog            </a>
 <p>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（subtype） 决定。</p>
 <h3 id="fcs">FCS</h3>
 <p>Frame Check Sequence， 帧校验序列， 用于保障帧数据完整性。</p>
-<h2 id="_1">帧类型</h2>
+<h2 id="">帧类型</h2>
 <p>前面在介绍Type和SubType字段的时候，我们已经知道这两个字段将无线MAC帧分为不同的类型，现在我们来进一步介绍下不同的无线MAC帧</p>
-<h3 id="_2">数据帧</h3>
+<h3 id="_1">数据帧</h3>
 <p>负责传送数据报文</p>
-<table>
-<thead>
-<tr>
-<th>帧类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Data</td>
-<td>货真价实的数据帧， 802.11数据报文的承载体</td>
-</tr>
-<tr>
-<td>NULL</td>
-<td>只有802.11 MAC首部 和FCS字段 在802.11中，Station可以通过NULL通知基站自己省电模式的改变</td>
-</tr>
-</tbody>
-</table>
-<h3 id="_3">控制帧</h3>
+<p>|帧类型      |   描述　      |
+|-----------|-------------|
+|   Data       |   货真价实的数据帧， 802.11数据报文的承载体　|
+|    NULL     |　只有802.11 MAC首部 和FCS字段 在802.11中，Station可以通过NULL通知基站自己省电模式的改变|</p>
+<h3 id="_1_2">控制帧</h3>
 <p>控制帧主要用来协助数据帧的传输，负责无线区域的清空，信道的获取等，还用于收取数据时的确认。下面是几种常用的控制帧。
 | 帧类型      |　描述　     |
  |-----------|-------------|
@@ -388,42 +215,16 @@ Windeal_Blog            </a>
 | PS-Poll     | 当Station从省电模式醒来，可以发送PS-Poll帧，从基站获取缓存帧 |
 | ACK          |  无线通信接收端通过回应ACK帧，向发送端确认接收到了报文  |
 | Block Ack Request/ Block Ack| 802.11n中，为了提升MAC层的效率，使用BlockACK机制对收到的一批数据帧进行一次性确认， Block Ack Request/ Block Ack用来简历BlockACK通道 |</p>
-<h3 id="_4">管理帧</h3>
+<h3 id="_1_2_3">管理帧</h3>
 <p>负责对无线网络的管理，包括网络信息通告、加入或退出无线网络，频谱管理等。</p>
-<table>
-<thead>
-<tr>
-<th>帧类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Beacon</td>
-<td>信标帧，周期性宣告某个802.11网络的存在，以及支持各类无线参数，比如网络名称（SSID），支持的速率，认证类型等。也包含基站为进入省电模式的Station缓存帧的信息。　｜</td>
-</tr>
-<tr>
-<td>Association Request/Response</td>
-<td>关联请求/应答， 当Station 师徒加入某个802.11网络，Station和基站关联时会使用。</td>
-</tr>
-<tr>
-<td>Disassociation</td>
-<td>去关联帧，Station和基站都可以发送Disassociation解除和对方的关联</td>
-</tr>
-<tr>
-<td>Authentication/Deauthentication</td>
-<td>认证/去认证帧，Station 和 基站关联是使用，用于无限身份认证</td>
-</tr>
-<tr>
-<td>Probe Request/Response</td>
-<td>探测帧， Station后基站 均可以发送该帧探测周围有那些802.11网络。接收到的基站需回应Probe Response， Probe Respoonse 帧中包含了Beacon帧所有的参数</td>
-</tr>
-<tr>
-<td>Action</td>
-<td>802.11h标准中添加的帧。用来要求802.11设备才去各类行动进行频谱管理</td>
-</tr>
-</tbody>
-</table>
+<p>| 帧类型      |　描述　     |
+ |-----------|-------------|
+ |   Beacon |  信标帧，周期性宣告某个802.11网络的存在，以及支持各类无线参数，比如网络名称（SSID），支持的速率，认证类型等。也包含基站为进入省电模式的Station缓存帧的信息。　｜
+| Association Request/Response|  关联请求/应答， 当Station 师徒加入某个802.11网络，Station和基站关联时会使用。|
+|  Disassociation| 去关联帧，Station和基站都可以发送Disassociation解除和对方的关联 |
+| Authentication/Deauthentication| 认证/去认证帧，Station 和 基站关联是使用，用于无限身份认证 |
+| Probe Request/Response |  探测帧， Station后基站 均可以发送该帧探测周围有那些802.11网络。接收到的基站需回应Probe Response， Probe Respoonse 帧中包含了Beacon帧所有的参数 |
+| Action| 802.11h标准中添加的帧。用来要求802.11设备才去各类行动进行频谱管理|</p>
             </div>
             <!-- /.entry-content -->
 <br/>
