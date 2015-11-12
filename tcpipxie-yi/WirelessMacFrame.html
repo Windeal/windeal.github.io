@@ -122,14 +122,14 @@ Windeal_Blog            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <h1 id="80211-macmac">802.11 MAC帧（无线MAC帧）</h1>
+                <h1 id="toc_f9c53f31a677a0989b5517ad12fded60">802.11 MAC帧（无线MAC帧）</h1>
 <p><img alt="Paste_Image.png" src="/static/images/TCPIP/wirelessMacFrame01.png"/></p>
 <p>Mac帧由三个基本域组成：
 + <strong>Mac Header：</strong>包括帧控制（ Frame Control） 、 时长（ Duration） 、 地址（ Address） 等
 + <strong>Frame Body：</strong>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（ sub type） 决定。
 + <strong>FCS：</strong>    （ Frame Check Sequence， 帧校验序列） 用于保障帧数据完整性。
 　　我们主要关注Mac Header部门，我们来逐个分析下Mac Header中的字段</p>
-<h3 id="frame-ctrl">Frame Ctrl</h3>
+<h3 id="toc_2f3366f64345d5c0266c67089d5401ac">Frame Ctrl</h3>
 <p>Frame 含2Byte（16位），可以进一步分为以下子字段：</p>
 <p><strong>(1) Protocol Version：</strong>
 　　代表802.11 MAC帧的版本号。 目前的值是0。</p>
@@ -168,9 +168,9 @@ Windeal_Blog            </a>
 　　表明数据是否加密。</p>
 <p><strong>(11): Order: </strong>
 　　 指明接收端必须按顺序处理该帧。</p>
-<h3 id="durationid">Duration/ID</h3>
+<h3 id="toc_874aa9a75d9b6069541e2015965bc276">Duration/ID</h3>
 <p>Duration/ID域占2字节共16位， 其具体含义根据Type和Subtype的不同而变化， 不过大体就两种， 分别代表ID和Duration。</p>
-<h3 id="address-address1address4">Address (Address1~Address4)</h3>
+<h3 id="toc_2484ff410437e1cc53cfb866e9263f99">Address (Address1~Address4)</h3>
 <p>首先，我们要知道，这里的Address以Mac地址的形式表示。网络传输中，Mac地址需要考虑字节序。Mac地址，字节序为Big-endian， 即最高字节在前。比特序为Little-endian， 即最低位在前。
 　　802.11 MAC帧头部分共包含四个Address域（一个可选）， 但规范中却有五种地址定义， 分别如下：</p>
 <p>| 序号|     地址定义     |       含义         |
@@ -187,27 +187,27 @@ Windeal_Blog            </a>
 |   0       |       1       |  From AP|        DA = RA           |  TA = BSSID               |      SA        |   未使用    |
 |   1       |       0       | To AP     |        RA = BSSID       | TA = SA                     |     DA        | 未使用    |
 |   1       |        1      |AP to AP |        RA                      |      TA                        |      DA        |    SA       |</p>
-<h3 id="seqctrl">SeqCtrl</h3>
+<h3 id="toc_ab4038aa364ae57df3c55c591321a54f">SeqCtrl</h3>
 <p>此字段用来丢弃重复帧和重复分片。包含两个子字段：Fragment Number 和Sequence Number。
 + <strong>Fragment Number：</strong>用于分片帧
 + <strong>Sequence Number：</strong>用于检验重复帧。如果设备收到的MAC帧的Sequence Number与之前收到的帧重复则丢弃。</p>
-<h3 id="qos-ctrl">Qos Ctrl(可选)</h3>
+<h3 id="toc_65aa09a87ca8847dcf539fc6bd110986">Qos Ctrl(可选)</h3>
 <p>此字段只出现在数据帧中，用以实现802.11e无限Qos功能。</p>
-<h3 id="ht-control">HT Control(可选)</h3>
+<h3 id="toc_87168141a1263868a88f733ac63ef8d3">HT Control(可选)</h3>
 <p>用于控制802.11n的“High-throughput”</p>
-<h3 id="frame-body">Frame Body</h3>
+<h3 id="toc_871ebd58afd2a51c111ed3278d2dba99">Frame Body</h3>
 <p>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（subtype） 决定。</p>
-<h3 id="fcs">FCS</h3>
+<h3 id="toc_f1d19b260aa610683ea57c183a12bad5">FCS</h3>
 <p>Frame Check Sequence， 帧校验序列， 用于保障帧数据完整性。</p>
-<h2 id="">帧类型</h2>
+<h2 id="toc_bf47c330772f707d20830f28fdfec966">帧类型</h2>
 <p>前面在介绍Type和SubType字段的时候，我们已经知道这两个字段将无线MAC帧分为不同的类型，现在我们来进一步介绍下不同的无线MAC帧</p>
-<h3 id="_1">数据帧</h3>
+<h3 id="toc_4f39fd2e06d1f46d6355ae321935ee04">数据帧</h3>
 <p>负责传送数据报文</p>
 <p>|帧类型      |   描述　      |
 |-----------|-------------|
 |   Data       |   货真价实的数据帧， 802.11数据报文的承载体　|
 |    NULL     |　只有802.11 MAC首部 和FCS字段 在802.11中，Station可以通过NULL通知基站自己省电模式的改变|</p>
-<h3 id="_1_2">控制帧</h3>
+<h3 id="toc_f7393338e70ad628dac3a51ae1e002be">控制帧</h3>
 <p>控制帧主要用来协助数据帧的传输，负责无线区域的清空，信道的获取等，还用于收取数据时的确认。下面是几种常用的控制帧。
 | 帧类型      |　描述　     |
  |-----------|-------------|
@@ -215,7 +215,7 @@ Windeal_Blog            </a>
 | PS-Poll     | 当Station从省电模式醒来，可以发送PS-Poll帧，从基站获取缓存帧 |
 | ACK          |  无线通信接收端通过回应ACK帧，向发送端确认接收到了报文  |
 | Block Ack Request/ Block Ack| 802.11n中，为了提升MAC层的效率，使用BlockACK机制对收到的一批数据帧进行一次性确认， Block Ack Request/ Block Ack用来简历BlockACK通道 |</p>
-<h3 id="_1_2_3">管理帧</h3>
+<h3 id="toc_0f9dbd8a326b437f22304fe8985afec2">管理帧</h3>
 <p>负责对无线网络的管理，包括网络信息通告、加入或退出无线网络，频谱管理等。</p>
 <p>| 帧类型      |　描述　     |
  |-----------|-------------|
@@ -283,6 +283,30 @@ Windeal_Blog            </a>
 
 
 
+            <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                    <li class="list-group-item tag-1">
+                        <a href="http://windeal.github.io/tag/pelican.html">
+                            pelican
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://windeal.github.io/tag/github.html">
+                            github
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://windeal.github.io/tag/wireless.html">
+                            wireless
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://windeal.github.io/tag/mac.html">
+                            MAC
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
 
     <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
@@ -297,6 +321,12 @@ Windeal_Blog            </a>
     </ul>
 </section>
 
+    <ul class="tagcloud">
+            <li class="tag-4"><a href="http://windeal.github.io/tag/wireless.html">wireless</a></li>
+            <li class="tag-1"><a href="http://windeal.github.io/tag/pelican.html">pelican</a></li>
+            <li class="tag-4"><a href="http://windeal.github.io/tag/mac.html">MAC</a></li>
+            <li class="tag-1"><a href="http://windeal.github.io/tag/github.html">github</a></li>
+    </ul>
             </aside>
         </div>
     </div>
