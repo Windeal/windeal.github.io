@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="baidu-site-verification" content="cnKNvzL2bE" />
 
 
 
@@ -123,56 +122,61 @@ Windeal_Blog            </a>
 </footer><!-- /.post-info -->                    </div>
                 </div>
                 <p>pelican是基于python的一个静态博客生成器，可以通过markdown编写md文件，然后用pelican生成html，最后部署在github pages上，作为个人博客。</p>
-<h1 id="toc_9f6e9dfd31d0cf6ba0438b19d6455d39">pelican安装</h1>
+<h1 id="pelican">pelican安装</h1>
 <p>关于pelican的安装网上已经有很多材料了（也可以查看官方文档<a href="http://docs.getpelican.com/en/3.6.0/quickstart.html#installation">pelican官方文档</a>)。
 　　<code>pip install pelican markdown</code>
  　　pelican和markdown是通过pip工具安装的，这里可能还需要安装pip极其依赖库什么的。我安装的时候比较顺利的，没遇到什么比较大的问题。如果中间有一些没办法安装，看看是不是缺少什么库，一起安装下就好了。这里就不再详细介绍pelican 和 markdown的安装了。</p>
-<h1 id="toc_7d137bc23ee10090409a75dc7cdb6c59">创建生成器项目</h1>
+<h1 id="">创建生成器项目</h1>
 <p>前面我们已经安装好了pelican，这里我们要开始使用它了。
-　　首先，我们创建一个Blog工作目录，然后快速生成Blog。
-<code>mkdir myBlog
+　　首先，我们创建一个Blog工作目录，然后快速生成Blog。</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">mkdir myBlog
 cd myBlog
-pelican-quickstart</code>
-　　在<code>pelican-quickstart</code>的时候，可能会有一些需要输入的信息，到时根据提示输入就可以了。
-　　前面的步骤完成后，我们会看到在myBlog目录下有很多文件和子目录。大概是这样的：
-<code>myblog/
+pelican-quickstart
+</pre></div>
+<p>在<code>pelican-quickstart</code>的时候，可能会有一些需要输入的信息，到时根据提示输入就可以了。
+　　前面的步骤完成后，我们会看到在myBlog目录下有很多文件和子目录。大概是这样的：</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">myblog/
 ├── content              # 存放输入的源文件
 │   └── (pages)          # 存放手工创建的静态页面(这个还没有）
 ├── output               # 生成的输出文件
 ├── develop_server.sh    # 方便开启测试服务器
 ├── Makefile             # 方便管理博客的Makefile
 ├── pelicanconf.py       # 主配置文件
-└── publishconf.py       # 发布时使用的配置文件</code></p>
-<h2 id="toc_d2d7112085fea12b32835b9e158d6329">第一遍文章</h2>
-<p>在content下用markdown语法编写一篇文章：
-```
-Title: pelican+github pages搭建个人静态博客
+└── publishconf.py       # 发布时使用的配置文件
+</pre></div>
+<h2 id="_1">第一遍文章</h2>
+<p>在content下用markdown语法编写一篇文章：</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">Title: pelican+github pages搭建个人静态博客
 Date: 2015-07-05
 Category: Python
 Tags: pelican, github
 Slug: my-super-post
 Author: Windeal.Li
-Summary: Short version for index and feeds</p>
-<p>Hello world.
-<code>``
- 　　这样我们的博客的第一张site就差不多完成了。我们可以在本机localhost进行测试：
-　　先打开http服务器：</code>./develop_server.sh start`
+Summary: Short version for index and feeds
+
+Hello world.
+</pre></div>
+<p>这样我们的博客的第一张site就差不多完成了。我们可以在本机localhost进行测试：
+　　先打开http服务器：
+<code>./develop_server.sh start</code>
 　　然后打开浏览器，输入localhost:8080,可以得到如下图所示：</p>
 <p><img alt="Paste_Image.png" src="/static/images/pelican/pelican_basic01.png"/></p>
-<h1 id="toc_5bfe3811976599fa4a6be3ebb185efd3">部署到github上</h1>
+<h1 id="github">部署到github上</h1>
 <p>关于部署到github pages上，可以参考官方文档 <a href="https://help.github.com/articles/creating-project-pages-manually/">Creating Project Pages manually</a> 不过我在自己做的时候有遇到一些问题，所以这里还是依照我最后成功的做法来描述。另外，在github搭建个人博客有两类，一类是直接大家搭建个人主页，每个github帐号只能创建一个，最后github pages的地址是username.github.io（这一类比较简单，网上的大部分教程也是针对这种情况的，本文不详细介绍。） 这里，我们主要介绍另一类情况，用一个repository搭建静态博客，最后得到的github pages地址是username.github.io/projectname ,例如我的是：<a href="http://windeal.github.io/myBlog/">http://windeal.github.io/myBlog/</a>.
 　　首先，登录github网站，在github上创建一个空仓库，如myBlog（这个就不用介绍了吧）。
-　　接着就是要把我们的博客搬到github仓库上去了。
-<code>cd output
+　　接着就是要把我们的博客搬到github仓库上去了。</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">cd output
 git init
 git add .
-git commit -m "First commit"</code>
-　　前面这些代码是git的一些简单操作，不明白的可以看下git的用法。
-　　我发现，在github上基于repository搭建静态博客时，需要建立在一个新的分支gh-pages，而不能使用master分支，具体原因现在我还没搞清楚。
-<code>git branch gh-pages            #创建本地分支
+git commit -m "First commit"
+</pre></div>
+<p>前面这些代码是git的一些简单操作，不明白的可以看下git的用法。
+　　我发现，在github上基于repository搭建静态博客时，需要建立在一个新的分支gh-pages，而不能使用master分支，具体原因现在我还没搞清楚。</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">git branch gh-pages            #创建本地分支
 git push origin gh-pages       #将本地分支push到github上
-git push -u origin gh-pages    #把我们前面生成的博客（output下面的文件）push到github上</code>
-到这里基本的部署就差不多完成了，我们看一下效果。</p>
+git push -u origin gh-pages    #把我们前面生成的博客（output下面的文件）push到github上
+</pre></div>
+<p>到这里基本的部署就差不多完成了，我们看一下效果。</p>
 <p><img alt="初步效果图" src="/static/images/pelican/pelican_basic02.png"/></p>
 <p>发现跟本地效果不太一样。
 好像主题没有正常工作。
@@ -180,20 +184,20 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
 在pelicanconf.py中修改siteurl变量：
 <code>SITEURL = 'http://windeal.github.io/myBlog/'</code></p>
 <p><img alt="带主题的效果图" src="/static/images/pelican/pelican_basic03.png"/></p>
-<h1 id="toc_048d1b53c55a32269f248eccfce84f19">插入本地图片</h1>
-<pre><code>pelican支持插入本地图片。
-</code></pre>
+<h1 id="_1_2">插入本地图片</h1>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">pelican支持插入本地图片。
+</pre></div>
 <ol>
 <li>创建一个保存静态媒体的目录static， （该目录中可以存放我们的图片）</li>
 <li>在pelicanconf.py中添加一行<code>STATIC_PATHS = [u"static"]</code>， 指定静态目录。</li>
 <li>根据markdown语法在文件中引用该图片。如我们在static中有一图片为test.png，则引用方式为：<code>![imge_name](/imgs/test.png)</code></li>
 </ol>
-<h1 id="toc_7ece5ab4c099c97a0dd6f6544d62e46d">添加评论插件</h1>
-<h2 id="toc_3b10e9fff3e41cb530fa711b61b4179a">Disqus评论插件</h2>
+<h1 id="_1_2_3">添加评论插件</h1>
+<h2 id="disqus">Disqus评论插件</h2>
 <ol>
 <li>在 Disqus 上注册一个用户并生成一个站点testname.disqus.com； (账号注册完以后在右上角有一个齿轮的标记 setting，在下拉列表中选择 add disqus to site)</li>
 <li>设置testname.disqus.com站点使其允许域名testname.github.io；</li>
-<li>设置以上配置文件为DISQUS_SITENAME = u"testname"，mcsrainbow 为站点ID</li>
+<li>设置以上配置文件为DISQUS_SITENAME = u”testname”，mcsrainbow 为站点ID</li>
 </ol>
             </div>
             <!-- /.entry-content -->
@@ -253,6 +257,30 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
 
 
 
+            <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+                <ul class="list-group " id="tags">
+                    <li class="list-group-item tag-1">
+                        <a href="http://windeal.github.io/tag/github.html">
+                            github
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-1">
+                        <a href="http://windeal.github.io/tag/pelican.html">
+                            pelican
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://windeal.github.io/tag/wireless.html">
+                            wireless
+                        </a>
+                    </li>
+                    <li class="list-group-item tag-4">
+                        <a href="http://windeal.github.io/tag/mac.html">
+                            MAC
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
 
     <li class="list-group-item"><h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
@@ -266,37 +294,11 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
     </li>
     </ul>
 </section>
-
-
-<section class="well" id="tag_cloud">
-    <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-    <ul class="tagcloud">
-            <li class="tag-4"><a href="http://windeal.github.io/tag/mac.html">MAC</a></li>
-            <li class="tag-1"><a href="http://windeal.github.io/tag/pelican.html">pelican</a></li>
-            <li class="tag-1"><a href="http://windeal.github.io/tag/github.html">github</a></li>
-            <li class="tag-4"><a href="http://windeal.github.io/tag/wireless.html">wireless</a></li>
-    </ul>
-    </li>
-</section>
-
-
-
-<section class="well well-sm">
-<div id="niu2-sidebar-toc" class="niu2-sidebar" data-status="closed">
-    <div class="niu2-sidebar-label">
-        <i id="niu2-sidebar-toc-ctrl" class="icon-open-tocs"></i>目录
-    </div>
-    <ul id="niu2-sidebar-toc-list">
-        <li><a href="#content-heading">pelican 介绍——基础篇</a></li>
-        <li><a href='#toc_9f6e9dfd31d0cf6ba0438b19d6455d39'>pelican安装</a></li><li><a href='#toc_7d137bc23ee10090409a75dc7cdb6c59'>创建生成器项目</a><ul><li><a href='#toc_d2d7112085fea12b32835b9e158d6329'>第一遍文章</a></li></ul></li><li><a href='#toc_5bfe3811976599fa4a6be3ebb185efd3'>部署到github上</a></li><li><a href='#toc_048d1b53c55a32269f248eccfce84f19'>插入本地图片</a></li><li><a href='#toc_7ece5ab4c099c97a0dd6f6544d62e46d'>添加评论插件</a><ul><li><a href='#toc_3b10e9fff3e41cb530fa711b61b4179a'>Disqus评论插件</a></li></ul></li>
-    </ul>
-</div>
-</section>
 <section class="well" id="related-posts">
     <h4>相关文章:</h4>
     <ul>
-        <li><a href="http://windeal.github.io/pelican/pelican_advance.html">pelican 介绍——进阶篇</a></li>
         <li><a href="http://windeal.github.io/others/nothing.html">个人简介</a></li>
+        <li><a href="http://windeal.github.io/pelican/pelican_advance.html">pelican 介绍——进阶篇</a></li>
     </ul>
 </section>
             </aside>
