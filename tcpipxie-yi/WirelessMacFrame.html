@@ -123,11 +123,13 @@ Windeal_Blog            </a>
                 </div>
                 <h1 id="80211-macmac">802.11 MAC帧（无线MAC帧）</h1>
 <p><img alt="Paste_Image.png" src="/static/images/TCPIP/wirelessMacFrame01.png"/></p>
-<p>Mac帧由三个基本域组成：
-+ <strong>Mac Header：</strong>包括帧控制（ Frame Control） 、 时长（ Duration） 、 地址（ Address） 等
-+ <strong>Frame Body：</strong>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（ sub type） 决定。
-+ <strong>FCS：</strong>    （ Frame Check Sequence， 帧校验序列） 用于保障帧数据完整性。
-　　我们主要关注Mac Header部门，我们来逐个分析下Mac Header中的字段</p>
+<p>Mac帧由三个基本域组成：</p>
+<ul>
+<li><strong>Mac Header：</strong>包括帧控制（ Frame Control） 、 时长（ Duration） 、 地址（ Address） 等</li>
+<li><strong>Frame Body：</strong>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（ sub type） 决定。</li>
+<li><strong>FCS：</strong>    （ Frame Check Sequence， 帧校验序列） 用于保障帧数据完整性。
+　　我们主要关注Mac Header部门，我们来逐个分析下Mac Header中的字段</li>
+</ul>
 <h3 id="frame-ctrl">Frame Ctrl</h3>
 <p>Frame 含2Byte（16位），可以进一步分为以下子字段：</p>
 <p><strong>(1) Protocol Version：</strong>
@@ -499,9 +501,9 @@ Windeal_Blog            </a>
     <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
     <ul class="tagcloud">
             <li class="tag-1"><a href="http://windeal.github.io/tag/pelican.html">pelican</a></li>
-            <li class="tag-1"><a href="http://windeal.github.io/tag/github.html">github</a></li>
             <li class="tag-4"><a href="http://windeal.github.io/tag/wireless.html">wireless</a></li>
             <li class="tag-4"><a href="http://windeal.github.io/tag/mac.html">MAC</a></li>
+            <li class="tag-1"><a href="http://windeal.github.io/tag/github.html">github</a></li>
     </ul>
     </li>
 </section>
