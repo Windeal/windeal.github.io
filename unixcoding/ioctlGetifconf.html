@@ -129,11 +129,9 @@ Windeal_Blog            </a>
                 </div>
                 <p>网络程序（尤其是服务器程序）经常在程序启动后使用ioctl后去所在主机的全部网络接口想你系。包括：接口地址、是否支持广播、是否支持多播等。本文主要介绍ioctl的一些基本知识，以及如何使用ioctl获取网络接口信息。
 　　ioctl是用来操纵特殊文件的底层设备参数。我们看下ioctl的用法:</p>
-<table class="codehilitetable"><tr><td><div class="linenodiv" style="background-color: #000000; padding-right: 10px"><pre style="line-height: 125%">1
-2</pre></div></td><td class="code"><div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;sys/ioctl.h&gt;</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;sys/ioctl.h&gt;</span>
 <span style="color: #66d9ef">int</span> <span style="color: #a6e22e">ioctl</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">fd,</span> <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">request,</span> <span style="color: #f8f8f2">...</span><span style="color: #75715e">/* void *arg */</span><span style="color: #f8f8f2">);</span>
 </pre></div>
-</td></tr></table>
 <ul>
 <li><strong>fd：</strong>一个打开的文件描述符。</li>
 <li><strong>request：</strong>与设备相关的请求码</li>
@@ -232,34 +230,7 @@ Windeal_Blog            </a>
 <h3 id="ioctl">ioctl 获取/设置特定网络接口参数</h3>
 <p>在前面的request表格中，我们看到，SIOCGIFCONF的数据类型与其他request不同，它是用来获取的所有网络接口列表，具体后面会介绍。现在我们来看下除了SIOCGIFCONF外，其他Request的使用，也就是具体某个网络接口参数的获取与设置。
 　　首先，了解下数据类型，即结构体<code>struct ifreq</code></p>
-<table class="codehilitetable"><tr><td><div class="linenodiv" style="background-color: #000000; padding-right: 10px"><pre style="line-height: 125%"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28</pre></div></td><td class="code"><div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span>
 <span style="color: #f8f8f2">{</span>
 <span style="color: #75715e"># define IFHWADDRLEN    6</span>
 <span style="color: #75715e"># define IFNAMSIZ   IF_NAMESIZE</span>
@@ -288,61 +259,9 @@ Windeal_Blog            </a>
 
 <span style="color: #f8f8f2">};</span>
 </pre></div>
-</td></tr></table>
 <p>不难看出，其实<code>struct ifreq</code>主要包含两个union结构，第一个字段标识网络接口名字，第二个字段则是该网络接口对应具体某个网络参数。简单的说，<strong>一个struct ifreq实例，表示某一网络接口的某个特定网络参数</strong>。现在，我们以网络接口mtu为例，说明我们是如何获得某个网络接口参数的。
 　　当我要获取一个网络接口（假设为eth0）的mtu，我们需要一个<code>struct ifreq</code>结构体对象，它的第一个字段的ifrn_name就是eth0了，而第二个union中生效的是int ifr_mtu这一字段。接下来我们看下实际程序中如何获取网络接口mtu。</p>
-<table class="codehilitetable"><tr><td><div class="linenodiv" style="background-color: #000000; padding-right: 10px"><pre style="line-height: 125%"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52</pre></div></td><td class="code"><div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;stdio.h&gt;                                                                                                                                                                                           </span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;stdio.h&gt;                                                                                                                                                                                           </span>
 <span style="color: #75715e">#include &lt;stdlib.h&gt;</span>
 <span style="color: #75715e">#include &lt;string.h&gt;</span>
 <span style="color: #75715e">#include &lt;net/if.h&gt;</span>
@@ -395,30 +314,15 @@ Windeal_Blog            </a>
 
 <span style="color: #f8f8f2">}</span>    
 </pre></div>
-</td></tr></table>
 <p>运行结果：</p>
-<table class="codehilitetable"><tr><td><div class="linenodiv" style="background-color: #000000; padding-right: 10px"><pre style="line-height: 125%">1
-2
-3</pre></div></td><td class="code"><div class="codehilite" style="background: #272822"><pre style="line-height: 125%">windeal@ubuntu:Windeal<span style="color: #f8f8f2">$ </span>sudo ./a.out
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">windeal@ubuntu:Windeal<span style="color: #f8f8f2">$ </span>sudo ./a.out
 eth0<span style="color: #e6db74">'s mtu is 1500</span>
 <span style="color: #e6db74">eth0'</span>s mtu is 1200
 </pre></div>
-</td></tr></table>
 <h3 id="ioctl_1">ioctl获取所有网络接口列表</h3>
 <p>前面我们已经说过，在与网络接口相关的request中，SIOCIFCONF与众不同，它可以获取所有网络接口的列表，SIOCGIFCONF最终返回的其实是一个struct ifreq类型的数组。数组的每一项代表这一个网络接口以及它对应的ip地址。
 　　我们先看下<code>struct ifconf</code></p>
-<table class="codehilitetable"><tr><td><div class="linenodiv" style="background-color: #000000; padding-right: 10px"><pre style="line-height: 125%"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12</pre></div></td><td class="code"><div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifconf</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifconf</span>
 <span style="color: #f8f8f2">{</span>
     <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">ifc_len;</span>            <span style="color: #75715e">/* Size of buffer.  */</span>
     <span style="color: #66d9ef">union</span>
@@ -431,64 +335,13 @@ eth0<span style="color: #e6db74">'s mtu is 1500</span>
 <span style="color: #75715e"># define ifc_buf    ifc_ifcu.ifcu_buf   /* Buffer address.  */</span>
 <span style="color: #75715e"># define ifc_req    ifc_ifcu.ifcu_req   /* Array of structures.  */</span>
 </pre></div>
-</td></tr></table>
 <p>结构体struct ifconf包含两个字段，第一个字段ifc_len表示第二个字段指向的数据buf的size。第二个字段是一个联合体。
 + <strong>ifc_len：</strong>    数据区的大小
 + <strong>ifcu_buf：</strong>   用户用户设置接口参数时，保存要传给内核的接口参数。
 + <strong>ifcu_req：</strong>    用于用户向内核请求数据，从内核返回的接口信息。
 　　<strong>ifcu_req指向一个struct ifreq数组，数组的每一项存储着一个接口的名字和接口的ip。 因此，<code>ifc_len/sizeof(struct ifreq)</code>就是本机的网络接口的数目。</strong>
 　</p>
-<table class="codehilitetable"><tr><td><div class="linenodiv" style="background-color: #000000; padding-right: 10px"><pre style="line-height: 125%"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51</pre></div></td><td class="code"><div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;stdio.h&gt;                                                                                                                                                                                        </span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;stdio.h&gt;                                                                                                                                                                                        </span>
 <span style="color: #75715e">#include &lt;stdlib.h&gt;</span>
 <span style="color: #75715e">#include &lt;string.h&gt;</span>
 <span style="color: #75715e">#include &lt;net/if.h&gt;</span>
@@ -540,19 +393,13 @@ eth0<span style="color: #e6db74">'s mtu is 1500</span>
     <span style="color: #66d9ef">return</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span>
  <span style="color: #f8f8f2">}</span>  
 </pre></div>
-</td></tr></table>
 <p>结果如下</p>
-<table class="codehilitetable"><tr><td><div class="linenodiv" style="background-color: #000000; padding-right: 10px"><pre style="line-height: 125%">1
-2
-3
-4
-5</pre></div></td><td class="code"><div class="codehilite" style="background: #272822"><pre style="line-height: 125%">windeal@ubuntu:Windeal<span style="color: #f8f8f2">$ </span>./a.out
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">windeal@ubuntu:Windeal<span style="color: #f8f8f2">$ </span>./a.out
 Len: 320
 Len: 64
 127.0.0.1
 192.168.1.106
 </pre></div>
-</td></tr></table>
             </div>
             <!-- /.entry-content -->
 <br/>
@@ -628,12 +475,12 @@ Len: 64
 <section class="well" id="tag_cloud">
     <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
     <ul class="tagcloud">
-            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
             <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
             <a class="tag-4" href="http://windeal.github.io/tag/linux.html">Linux</a>
     </ul>
     </li>
