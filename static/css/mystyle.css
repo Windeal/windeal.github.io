@@ -4,9 +4,16 @@ table, th, td
 
 }
 
+
+codeHighLight
+{
+    background-color:#d0e4fe;
+}
+
 .page-header
 {
         color:green;
             text-align: center;
 
 }
+

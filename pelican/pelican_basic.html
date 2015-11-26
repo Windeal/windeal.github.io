@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="http://windeal.github.io/theme/css/bootstrap.min.css" type="text/css"/>
     <link href="http://windeal.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="http://windeal.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link href="http://windeal.github.io/theme/css/pygments/monokai.css" rel="stylesheet">
     <link rel="stylesheet" href="http://windeal.github.io/theme/css/style.css" type="text/css"/>
         <link href="http://windeal.github.io/static/css/mystyle.css" rel="stylesheet">
 
@@ -127,13 +127,13 @@ Windeal_Blog            </a>
 <h1 id="">创建生成器项目</h1>
 <p>前面我们已经安装好了pelican，这里我们要开始使用它了。
 　　首先，我们创建一个Blog工作目录，然后快速生成Blog。</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">mkdir myBlog
+<div class="codehilite" style="background: #020202"><pre style="line-height: 125%">mkdir myBlog
 cd myBlog
 pelican-quickstart
 </pre></div>
 <p>在<code>pelican-quickstart</code>的时候，可能会有一些需要输入的信息，到时根据提示输入就可以了。
 　　前面的步骤完成后，我们会看到在myBlog目录下有很多文件和子目录。大概是这样的：</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">myblog/
+<div class="codehilite" style="background: #020202"><pre style="line-height: 125%">myblog/
 ├── content              # 存放输入的源文件
 │   └── (pages)          # 存放手工创建的静态页面(这个还没有）
 ├── output               # 生成的输出文件
@@ -144,7 +144,7 @@ pelican-quickstart
 </pre></div>
 <h2 id="_1">第一遍文章</h2>
 <p>在content下用markdown语法编写一篇文章：</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">Title: pelican+github pages搭建个人静态博客
+<div class="codehilite" style="background: #020202"><pre style="line-height: 125%">Title: pelican+github pages搭建个人静态博客
 Date: 2015-07-05
 Category: Python
 Tags: pelican, github
@@ -163,14 +163,14 @@ Hello world.
 <p>关于部署到github pages上，可以参考官方文档 <a href="https://help.github.com/articles/creating-project-pages-manually/">Creating Project Pages manually</a> 不过我在自己做的时候有遇到一些问题，所以这里还是依照我最后成功的做法来描述。另外，在github搭建个人博客有两类，一类是直接大家搭建个人主页，每个github帐号只能创建一个，最后github pages的地址是username.github.io（这一类比较简单，网上的大部分教程也是针对这种情况的，本文不详细介绍。） 这里，我们主要介绍另一类情况，用一个repository搭建静态博客，最后得到的github pages地址是username.github.io/projectname ,例如我的是：<a href="http://windeal.github.io/myBlog/">http://windeal.github.io/myBlog/</a>.
 　　首先，登录github网站，在github上创建一个空仓库，如myBlog（这个就不用介绍了吧）。
 　　接着就是要把我们的博客搬到github仓库上去了。</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">cd output
+<div class="codehilite" style="background: #020202"><pre style="line-height: 125%">cd output
 git init
 git add .
 git commit -m "First commit"
 </pre></div>
 <p>前面这些代码是git的一些简单操作，不明白的可以看下git的用法。
 　　我发现，在github上基于repository搭建静态博客时，需要建立在一个新的分支gh-pages，而不能使用master分支，具体原因现在我还没搞清楚。</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">git branch gh-pages            #创建本地分支
+<div class="codehilite" style="background: #020202"><pre style="line-height: 125%">git branch gh-pages            #创建本地分支
 git push origin gh-pages       #将本地分支push到github上
 git push -u origin gh-pages    #把我们前面生成的博客（output下面的文件）push到github上
 </pre></div>
@@ -183,7 +183,7 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
 <code>SITEURL = 'http://windeal.github.io/myBlog/'</code></p>
 <p><img alt="带主题的效果图" src="/static/images/pelican/pelican_basic03.png"/></p>
 <h1 id="_1_2">插入本地图片</h1>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%">pelican支持插入本地图片。
+<div class="codehilite" style="background: #020202"><pre style="line-height: 125%">pelican支持插入本地图片。
 </pre></div>
 <ol>
 <li>创建一个保存静态媒体的目录static， （该目录中可以存放我们的图片）</li>
@@ -279,13 +279,13 @@ git push -u origin gh-pages    #把我们前面生成的博客（output下面的
 <section class="well" id="tag_cloud">
     <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
     <ul class="tagcloud">
-            <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
             <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
             <a class="tag-4" href="http://windeal.github.io/tag/linux.html">Linux</a>
             <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
     </ul>
     </li>
 </section>
