@@ -129,8 +129,8 @@ Windeal_Blog            </a>
                 </div>
                 <p>网络程序（尤其是服务器程序）经常在程序启动后使用ioctl后去所在主机的全部网络接口想你系。包括：接口地址、是否支持广播、是否支持多播等。本文主要介绍ioctl的一些基本知识，以及如何使用ioctl获取网络接口信息。
 　　ioctl是用来操纵特殊文件的底层设备参数。我们看下ioctl的用法:</p>
-<div class="codehilite" style="background: #000000"><pre style="line-height: 125%"><span style="color: #000080">#include &lt;sys/ioctl.h&gt;</span>
-<span style="color: #00cd00">int</span> <span style="color: #cccccc">ioctl(</span><span style="color: #00cd00">int</span> <span style="color: #cccccc">fd,</span> <span style="color: #00cd00">int</span> <span style="color: #cccccc">request,</span> <span style="color: #cccccc">...</span><span style="color: #000080">/* void *arg */</span><span style="color: #cccccc">);</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;sys/ioctl.h&gt;</span>
+<span style="color: #66d9ef">int</span> <span style="color: #a6e22e">ioctl</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">fd,</span> <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">request,</span> <span style="color: #f8f8f2">...</span><span style="color: #75715e">/* void *arg */</span><span style="color: #f8f8f2">);</span>
 </pre></div>
 <ul>
 <li><strong>fd：</strong>一个打开的文件描述符。</li>
@@ -230,110 +230,110 @@ Windeal_Blog            </a>
 <h3 id="ioctl">ioctl 获取/设置特定网络接口参数</h3>
 <p>在前面的request表格中，我们看到，SIOCGIFCONF的数据类型与其他request不同，它是用来获取的所有网络接口列表，具体后面会介绍。现在我们来看下除了SIOCGIFCONF外，其他Request的使用，也就是具体某个网络接口参数的获取与设置。
 　　首先，了解下数据类型，即结构体<code>struct ifreq</code></p>
-<div class="codehilite" style="background: #000000"><pre style="line-height: 125%"><span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span>
-<span style="color: #cccccc">{</span>
-<span style="color: #000080"># define IFHWADDRLEN    6</span>
-<span style="color: #000080"># define IFNAMSIZ   IF_NAMESIZE</span>
-    <span style="color: #cdcd00">union</span>
-    <span style="color: #cccccc">{</span>
-<span style="color: #00cd00">char</span> <span style="color: #cccccc">ifrn_name[IFNAMSIZ];</span>   <span style="color: #000080">/* Interface name, e.g. "en0".  */</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span>
+<span style="color: #f8f8f2">{</span>
+<span style="color: #75715e"># define IFHWADDRLEN    6</span>
+<span style="color: #75715e"># define IFNAMSIZ   IF_NAMESIZE</span>
+    <span style="color: #66d9ef">union</span>
+    <span style="color: #f8f8f2">{</span>
+<span style="color: #66d9ef">char</span> <span style="color: #f8f8f2">ifrn_name[IFNAMSIZ];</span>   <span style="color: #75715e">/* Interface name, e.g. "en0".  */</span>
 
-    <span style="color: #cccccc">}</span> <span style="color: #cccccc">ifr_ifrn;</span>
+    <span style="color: #f8f8f2">}</span> <span style="color: #f8f8f2">ifr_ifrn;</span>
 
-    <span style="color: #cdcd00">union</span>
-    <span style="color: #cccccc">{</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">sockaddr</span> <span style="color: #cccccc">ifru_addr;</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">sockaddr</span> <span style="color: #cccccc">ifru_dstaddr;</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">sockaddr</span> <span style="color: #cccccc">ifru_broadaddr;</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">sockaddr</span> <span style="color: #cccccc">ifru_netmask;</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">sockaddr</span> <span style="color: #cccccc">ifru_hwaddr;</span>
-    <span style="color: #00cd00">short</span> <span style="color: #00cd00">int</span> <span style="color: #cccccc">ifru_flags;</span>
-    <span style="color: #00cd00">int</span> <span style="color: #cccccc">ifru_ivalue;</span>
-    <span style="color: #00cd00">int</span> <span style="color: #cccccc">ifru_mtu;</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifmap</span> <span style="color: #cccccc">ifru_map;</span>
-    <span style="color: #00cd00">char</span> <span style="color: #cccccc">ifru_slave[IFNAMSIZ];</span>  <span style="color: #000080">/* Just fits the size */</span>
-    <span style="color: #00cd00">char</span> <span style="color: #cccccc">ifru_newname[IFNAMSIZ];</span>
-    <span style="color: #00cd00">__caddr_t</span> <span style="color: #cccccc">ifru_data;</span>
+    <span style="color: #66d9ef">union</span>
+    <span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">sockaddr</span> <span style="color: #f8f8f2">ifru_addr;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">sockaddr</span> <span style="color: #f8f8f2">ifru_dstaddr;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">sockaddr</span> <span style="color: #f8f8f2">ifru_broadaddr;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">sockaddr</span> <span style="color: #f8f8f2">ifru_netmask;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">sockaddr</span> <span style="color: #f8f8f2">ifru_hwaddr;</span>
+    <span style="color: #66d9ef">short</span> <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">ifru_flags;</span>
+    <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">ifru_ivalue;</span>
+    <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">ifru_mtu;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifmap</span> <span style="color: #f8f8f2">ifru_map;</span>
+    <span style="color: #66d9ef">char</span> <span style="color: #f8f8f2">ifru_slave[IFNAMSIZ];</span>  <span style="color: #75715e">/* Just fits the size */</span>
+    <span style="color: #66d9ef">char</span> <span style="color: #f8f8f2">ifru_newname[IFNAMSIZ];</span>
+    <span style="color: #66d9ef">__caddr_t</span> <span style="color: #f8f8f2">ifru_data;</span>
 
-    <span style="color: #cccccc">}</span> <span style="color: #cccccc">ifr_ifru;</span>
+    <span style="color: #f8f8f2">}</span> <span style="color: #f8f8f2">ifr_ifru;</span>
 
-<span style="color: #cccccc">};</span>
+<span style="color: #f8f8f2">};</span>
 </pre></div>
 <p>不难看出，其实<code>struct ifreq</code>主要包含两个union结构，第一个字段标识网络接口名字，第二个字段则是该网络接口对应具体某个网络参数。简单的说，<strong>一个struct ifreq实例，表示某一网络接口的某个特定网络参数</strong>。现在，我们以网络接口mtu为例，说明我们是如何获得某个网络接口参数的。
 　　当我要获取一个网络接口（假设为eth0）的mtu，我们需要一个<code>struct ifreq</code>结构体对象，它的第一个字段的ifrn_name就是eth0了，而第二个union中生效的是int ifr_mtu这一字段。接下来我们看下实际程序中如何获取网络接口mtu。</p>
-<div class="codehilite" style="background: #000000"><pre style="line-height: 125%"><span style="color: #000080">#include &lt;stdio.h&gt;                                                                                                                                                                                           </span>
-<span style="color: #000080">#include &lt;stdlib.h&gt;</span>
-<span style="color: #000080">#include &lt;string.h&gt;</span>
-<span style="color: #000080">#include &lt;net/if.h&gt;</span>
-<span style="color: #000080">#include &lt;sys/ioctl.h&gt;</span>
-<span style="color: #000080">#include &lt;sys/socket.h&gt;</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;stdio.h&gt;                                                                                                                                                                                           </span>
+<span style="color: #75715e">#include &lt;stdlib.h&gt;</span>
+<span style="color: #75715e">#include &lt;string.h&gt;</span>
+<span style="color: #75715e">#include &lt;net/if.h&gt;</span>
+<span style="color: #75715e">#include &lt;sys/ioctl.h&gt;</span>
+<span style="color: #75715e">#include &lt;sys/socket.h&gt;</span>
 
-<span style="color: #00cd00">int</span> <span style="color: #cccccc">main(</span><span style="color: #00cd00">int</span> <span style="color: #cccccc">argc,</span> <span style="color: #00cd00">char</span><span style="color: #3399cc">*</span> <span style="color: #cccccc">argv[])</span>
-<span style="color: #cccccc">{</span>
-    <span style="color: #00cd00">int</span> <span style="color: #cccccc">sock;</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span> <span style="color: #cccccc">ifReq;</span>
+<span style="color: #66d9ef">int</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">argc,</span> <span style="color: #66d9ef">char</span><span style="color: #f92672">*</span> <span style="color: #f8f8f2">argv[])</span>
+<span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">sock;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span> <span style="color: #f8f8f2">ifReq;</span>
 
-    <span style="color: #cdcd00">if</span> <span style="color: #cccccc">(</span> <span style="color: #cccccc">(sock</span> <span style="color: #3399cc">=</span> <span style="color: #cccccc">socket(AF_INET,</span> <span style="color: #cccccc">SOCK_DGRAM,</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">))</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cd00cd">0</span>  <span style="color: #cccccc">)</span>
-    <span style="color: #cccccc">{</span>  
-        <span style="color: #cccccc">fprintf(stderr,</span> <span style="color: #cd0000">"socket failed!\n"</span><span style="color: #cccccc">);</span>
-        <span style="color: #cccccc">exit(</span><span style="color: #3399cc">-</span><span style="color: #cd00cd">1</span><span style="color: #cccccc">);</span>
-     <span style="color: #cccccc">}</span>  
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(</span> <span style="color: #f8f8f2">(sock</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">socket(AF_INET,</span> <span style="color: #f8f8f2">SOCK_DGRAM,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">))</span> <span style="color: #f92672">&lt;</span> <span style="color: #ae81ff">0</span>  <span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">{</span>  
+        <span style="color: #f8f8f2">fprintf(stderr,</span> <span style="color: #e6db74">"socket failed!</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">);</span>
+        <span style="color: #f8f8f2">exit(</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">);</span>
+     <span style="color: #f8f8f2">}</span>  
 
-    <span style="color: #000080">// 获取eth0 当前MTU</span>
-    <span style="color: #cccccc">memset(</span><span style="color: #3399cc">&amp;</span><span style="color: #cccccc">ifReq,</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">,</span> <span style="color: #cdcd00">sizeof</span><span style="color: #cccccc">(ifReq));</span>
-    <span style="color: #cccccc">strncpy(ifReq.ifr_ifrn.ifrn_name,</span> <span style="color: #cd0000">"eth0"</span><span style="color: #cccccc">,</span> <span style="color: #cd00cd">5</span><span style="color: #cccccc">);</span>
-    <span style="color: #cdcd00">if</span><span style="color: #cccccc">(ioctl(sock,</span> <span style="color: #cccccc">SIOCGIFMTU,</span> <span style="color: #3399cc">&amp;</span><span style="color: #cccccc">ifReq)</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cd00cd">0</span> <span style="color: #cccccc">)</span>
-    <span style="color: #cccccc">{</span>  
-        <span style="color: #cccccc">perror(</span><span style="color: #cd0000">"ioctl SIOCGIFMTU error\n"</span><span style="color: #cccccc">);</span>
-        <span style="color: #cccccc">exit(</span><span style="color: #3399cc">-</span><span style="color: #cd00cd">1</span><span style="color: #cccccc">);</span>
-     <span style="color: #cccccc">}</span>  
-    <span style="color: #cccccc">printf(</span><span style="color: #cd0000">"eth0's mtu is %d\n"</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">ifReq.ifr_ifru.ifru_mtu);</span>
+    <span style="color: #75715e">// 获取eth0 当前MTU</span>
+    <span style="color: #f8f8f2">memset(</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">ifReq,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">sizeof</span><span style="color: #f8f8f2">(ifReq));</span>
+    <span style="color: #f8f8f2">strncpy(ifReq.ifr_ifrn.ifrn_name,</span> <span style="color: #e6db74">"eth0"</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5</span><span style="color: #f8f8f2">);</span>
+    <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(ioctl(sock,</span> <span style="color: #f8f8f2">SIOCGIFMTU,</span> <span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">ifReq)</span> <span style="color: #f92672">&lt;</span> <span style="color: #ae81ff">0</span> <span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">{</span>  
+        <span style="color: #f8f8f2">perror(</span><span style="color: #e6db74">"ioctl SIOCGIFMTU error</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">);</span>
+        <span style="color: #f8f8f2">exit(</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">);</span>
+     <span style="color: #f8f8f2">}</span>  
+    <span style="color: #f8f8f2">printf(</span><span style="color: #e6db74">"eth0's mtu is %d</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">ifReq.ifr_ifru.ifru_mtu);</span>
 
-    <span style="color: #000080">//将eth0的MTU设置为1200</span>
-    <span style="color: #cccccc">memset(</span><span style="color: #3399cc">&amp;</span><span style="color: #cccccc">ifReq,</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">,</span> <span style="color: #cdcd00">sizeof</span><span style="color: #cccccc">(ifReq));</span>
-    <span style="color: #cccccc">strncpy(ifReq.ifr_ifrn.ifrn_name,</span> <span style="color: #cd0000">"eth0"</span><span style="color: #cccccc">,</span> <span style="color: #cd00cd">5</span><span style="color: #cccccc">);</span>
-    <span style="color: #cccccc">ifReq.ifr_ifru.ifru_mtu</span> <span style="color: #3399cc">=</span> <span style="color: #cd00cd">1200</span><span style="color: #cccccc">;</span>
-    <span style="color: #cdcd00">if</span><span style="color: #cccccc">(ioctl(sock,</span> <span style="color: #cccccc">SIOCSIFMTU,</span> <span style="color: #3399cc">&amp;</span><span style="color: #cccccc">ifReq)</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cd00cd">0</span> <span style="color: #cccccc">)</span>
-    <span style="color: #cccccc">{</span>  
-        <span style="color: #cccccc">perror(</span><span style="color: #cd0000">"ioctl  SIOCSIFMTU error\n"</span><span style="color: #cccccc">);</span>
-        <span style="color: #cccccc">exit(</span><span style="color: #3399cc">-</span><span style="color: #cd00cd">1</span><span style="color: #cccccc">);</span>
-     <span style="color: #cccccc">}</span>  
+    <span style="color: #75715e">//将eth0的MTU设置为1200</span>
+    <span style="color: #f8f8f2">memset(</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">ifReq,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">sizeof</span><span style="color: #f8f8f2">(ifReq));</span>
+    <span style="color: #f8f8f2">strncpy(ifReq.ifr_ifrn.ifrn_name,</span> <span style="color: #e6db74">"eth0"</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5</span><span style="color: #f8f8f2">);</span>
+    <span style="color: #f8f8f2">ifReq.ifr_ifru.ifru_mtu</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">1200</span><span style="color: #f8f8f2">;</span>
+    <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(ioctl(sock,</span> <span style="color: #f8f8f2">SIOCSIFMTU,</span> <span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">ifReq)</span> <span style="color: #f92672">&lt;</span> <span style="color: #ae81ff">0</span> <span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">{</span>  
+        <span style="color: #f8f8f2">perror(</span><span style="color: #e6db74">"ioctl  SIOCSIFMTU error</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">);</span>
+        <span style="color: #f8f8f2">exit(</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">);</span>
+     <span style="color: #f8f8f2">}</span>  
 
-    <span style="color: #000080">// 获取eth0 修改 后MTU</span>
-    <span style="color: #cccccc">memset(</span><span style="color: #3399cc">&amp;</span><span style="color: #cccccc">ifReq,</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">,</span> <span style="color: #cdcd00">sizeof</span><span style="color: #cccccc">(ifReq));</span>
-    <span style="color: #cccccc">strncpy(ifReq.ifr_ifrn.ifrn_name,</span> <span style="color: #cd0000">"eth0"</span><span style="color: #cccccc">,</span> <span style="color: #cd00cd">5</span><span style="color: #cccccc">);</span>
-    <span style="color: #cdcd00">if</span><span style="color: #cccccc">(ioctl(sock,</span> <span style="color: #cccccc">SIOCGIFMTU,</span> <span style="color: #3399cc">&amp;</span><span style="color: #cccccc">ifReq)</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cd00cd">0</span> <span style="color: #cccccc">)</span>
-    <span style="color: #cccccc">{</span>
-        <span style="color: #cccccc">perror(</span><span style="color: #cd0000">"ioctl SIOCGIFMTU error\n"</span><span style="color: #cccccc">);</span>
-        <span style="color: #cccccc">exit(</span><span style="color: #3399cc">-</span><span style="color: #cd00cd">1</span><span style="color: #cccccc">);</span>
+    <span style="color: #75715e">// 获取eth0 修改 后MTU</span>
+    <span style="color: #f8f8f2">memset(</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">ifReq,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">sizeof</span><span style="color: #f8f8f2">(ifReq));</span>
+    <span style="color: #f8f8f2">strncpy(ifReq.ifr_ifrn.ifrn_name,</span> <span style="color: #e6db74">"eth0"</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5</span><span style="color: #f8f8f2">);</span>
+    <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(ioctl(sock,</span> <span style="color: #f8f8f2">SIOCGIFMTU,</span> <span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">ifReq)</span> <span style="color: #f92672">&lt;</span> <span style="color: #ae81ff">0</span> <span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">{</span>
+        <span style="color: #f8f8f2">perror(</span><span style="color: #e6db74">"ioctl SIOCGIFMTU error</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">);</span>
+        <span style="color: #f8f8f2">exit(</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">);</span>
 
-    <span style="color: #cccccc">}</span>
-    <span style="color: #cccccc">printf(</span><span style="color: #cd0000">"eth0's mtu is %d\n"</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">ifReq.ifr_ifru.ifru_mtu);</span>
+    <span style="color: #f8f8f2">}</span>
+    <span style="color: #f8f8f2">printf(</span><span style="color: #e6db74">"eth0's mtu is %d</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">ifReq.ifr_ifru.ifru_mtu);</span>
 
-    <span style="color: #cdcd00">return</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">;</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span>
 
-<span style="color: #cccccc">}</span>    
+<span style="color: #f8f8f2">}</span>    
 </pre></div>
 <p>运行结果：</p>
-<div class="codehilite" style="background: #000000"><pre style="line-height: 125%">windeal@ubuntu:Windeal<span style="color: #00cdcd">$ </span>sudo ./a.out
-eth0<span style="color: #cd0000">'s mtu is 1500</span>
-<span style="color: #cd0000">eth0'</span>s mtu is 1200
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">windeal@ubuntu:Windeal<span style="color: #f8f8f2">$ </span>sudo ./a.out
+eth0<span style="color: #e6db74">'s mtu is 1500</span>
+<span style="color: #e6db74">eth0'</span>s mtu is 1200
 </pre></div>
 <h3 id="ioctl_1">ioctl获取所有网络接口列表</h3>
 <p>前面我们已经说过，在与网络接口相关的request中，SIOCIFCONF与众不同，它可以获取所有网络接口的列表，SIOCGIFCONF最终返回的其实是一个struct ifreq类型的数组。数组的每一项代表这一个网络接口以及它对应的ip地址。
 　　我们先看下<code>struct ifconf</code></p>
-<div class="codehilite" style="background: #000000"><pre style="line-height: 125%"><span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifconf</span>
-<span style="color: #cccccc">{</span>
-    <span style="color: #00cd00">int</span> <span style="color: #cccccc">ifc_len;</span>            <span style="color: #000080">/* Size of buffer.  */</span>
-    <span style="color: #cdcd00">union</span>
-      <span style="color: #cccccc">{</span>  
-        <span style="color: #00cd00">char</span><span style="color: #3399cc">*</span> <span style="color: #cccccc">ifcu_buf;</span>
-        <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span> <span style="color: #3399cc">*</span><span style="color: #cccccc">ifcu_req;</span>
-       <span style="color: #cccccc">}</span> <span style="color: #cccccc">ifc_ifcu;</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifconf</span>
+<span style="color: #f8f8f2">{</span>
+    <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">ifc_len;</span>            <span style="color: #75715e">/* Size of buffer.  */</span>
+    <span style="color: #66d9ef">union</span>
+      <span style="color: #f8f8f2">{</span>  
+        <span style="color: #66d9ef">char</span><span style="color: #f92672">*</span> <span style="color: #f8f8f2">ifcu_buf;</span>
+        <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span> <span style="color: #f92672">*</span><span style="color: #f8f8f2">ifcu_req;</span>
+       <span style="color: #f8f8f2">}</span> <span style="color: #f8f8f2">ifc_ifcu;</span>
 
-<span style="color: #cccccc">};</span>
-<span style="color: #000080"># define ifc_buf    ifc_ifcu.ifcu_buf   /* Buffer address.  */</span>
-<span style="color: #000080"># define ifc_req    ifc_ifcu.ifcu_req   /* Array of structures.  */</span>
+<span style="color: #f8f8f2">};</span>
+<span style="color: #75715e"># define ifc_buf    ifc_ifcu.ifcu_buf   /* Buffer address.  */</span>
+<span style="color: #75715e"># define ifc_req    ifc_ifcu.ifcu_req   /* Array of structures.  */</span>
 </pre></div>
 <p>结构体struct ifconf包含两个字段，第一个字段ifc_len表示第二个字段指向的数据buf的size。第二个字段是一个联合体。
 + <strong>ifc_len：</strong>    数据区的大小
@@ -341,60 +341,60 @@ eth0<span style="color: #cd0000">'s mtu is 1500</span>
 + <strong>ifcu_req：</strong>    用于用户向内核请求数据，从内核返回的接口信息。
 　　<strong>ifcu_req指向一个struct ifreq数组，数组的每一项存储着一个接口的名字和接口的ip。 因此，<code>ifc_len/sizeof(struct ifreq)</code>就是本机的网络接口的数目。</strong>
 　</p>
-<div class="codehilite" style="background: #000000"><pre style="line-height: 125%"><span style="color: #000080">#include &lt;stdio.h&gt;                                                                                                                                                                                        </span>
-<span style="color: #000080">#include &lt;stdlib.h&gt;</span>
-<span style="color: #000080">#include &lt;string.h&gt;</span>
-<span style="color: #000080">#include &lt;net/if.h&gt;</span>
-<span style="color: #000080">#include &lt;sys/ioctl.h&gt;</span>
-<span style="color: #000080">#include &lt;sys/socket.h&gt;</span>
-<span style="color: #000080">#include &lt;netinet/in.h&gt;</span>
-<span style="color: #000080">#include &lt;arpa/inet.h&gt;</span>
-<span style="color: #000080">#define MAX_IF_NUM 10  //假设本机最多10个网络接口</span>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%"><span style="color: #75715e">#include &lt;stdio.h&gt;                                                                                                                                                                                        </span>
+<span style="color: #75715e">#include &lt;stdlib.h&gt;</span>
+<span style="color: #75715e">#include &lt;string.h&gt;</span>
+<span style="color: #75715e">#include &lt;net/if.h&gt;</span>
+<span style="color: #75715e">#include &lt;sys/ioctl.h&gt;</span>
+<span style="color: #75715e">#include &lt;sys/socket.h&gt;</span>
+<span style="color: #75715e">#include &lt;netinet/in.h&gt;</span>
+<span style="color: #75715e">#include &lt;arpa/inet.h&gt;</span>
+<span style="color: #75715e">#define MAX_IF_NUM 10  //假设本机最多10个网络接口</span>
 
-<span style="color: #00cd00">int</span> <span style="color: #cccccc">main(</span><span style="color: #00cd00">int</span> <span style="color: #cccccc">argc,</span> <span style="color: #00cd00">char</span><span style="color: #3399cc">*</span> <span style="color: #cccccc">argv[])</span>
-<span style="color: #cccccc">{</span> 
-    <span style="color: #00cd00">int</span> <span style="color: #cccccc">sock;</span>
-    <span style="color: #00cd00">int</span> <span style="color: #cccccc">ipDotBuf[</span><span style="color: #cd00cd">16</span><span style="color: #cccccc">];</span>  <span style="color: #000080">//保存点分十进制地址</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span> <span style="color: #cccccc">ifVec[MAX_IF_NUM];</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifconf</span> <span style="color: #cccccc">ifConf;</span>
-    <span style="color: #cccccc">ifConf.ifc_len</span> <span style="color: #3399cc">=</span> <span style="color: #cdcd00">sizeof</span><span style="color: #cccccc">(ifVec);</span>
-    <span style="color: #cccccc">ifConf.ifc_buf</span> <span style="color: #3399cc">=</span> <span style="color: #cccccc">(</span><span style="color: #00cd00">void</span> <span style="color: #3399cc">*</span><span style="color: #cccccc">)ifVec;</span>
-    <span style="color: #cccccc">printf(</span><span style="color: #cd0000">"Len: %d \n"</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">ifConf.ifc_len);</span>
+<span style="color: #66d9ef">int</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">argc,</span> <span style="color: #66d9ef">char</span><span style="color: #f92672">*</span> <span style="color: #f8f8f2">argv[])</span>
+<span style="color: #f8f8f2">{</span> 
+    <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">sock;</span>
+    <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">ipDotBuf[</span><span style="color: #ae81ff">16</span><span style="color: #f8f8f2">];</span>  <span style="color: #75715e">//保存点分十进制地址</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span> <span style="color: #f8f8f2">ifVec[MAX_IF_NUM];</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifconf</span> <span style="color: #f8f8f2">ifConf;</span>
+    <span style="color: #f8f8f2">ifConf.ifc_len</span> <span style="color: #f92672">=</span> <span style="color: #66d9ef">sizeof</span><span style="color: #f8f8f2">(ifVec);</span>
+    <span style="color: #f8f8f2">ifConf.ifc_buf</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(</span><span style="color: #66d9ef">void</span> <span style="color: #f92672">*</span><span style="color: #f8f8f2">)ifVec;</span>
+    <span style="color: #f8f8f2">printf(</span><span style="color: #e6db74">"Len: %d </span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">ifConf.ifc_len);</span>
 
-    <span style="color: #cdcd00">if</span> <span style="color: #cccccc">(</span> <span style="color: #cccccc">(sock</span> <span style="color: #3399cc">=</span> <span style="color: #cccccc">socket(AF_INET,</span> <span style="color: #cccccc">SOCK_DGRAM,</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">))</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cd00cd">0</span>  <span style="color: #cccccc">)</span>
-    <span style="color: #cccccc">{</span>
-        <span style="color: #cccccc">fprintf(stderr,</span> <span style="color: #cd0000">"socket failed!\n"</span><span style="color: #cccccc">);</span>
-        <span style="color: #cccccc">exit(</span><span style="color: #3399cc">-</span><span style="color: #cd00cd">1</span><span style="color: #cccccc">);</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(</span> <span style="color: #f8f8f2">(sock</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">socket(AF_INET,</span> <span style="color: #f8f8f2">SOCK_DGRAM,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">))</span> <span style="color: #f92672">&lt;</span> <span style="color: #ae81ff">0</span>  <span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">{</span>
+        <span style="color: #f8f8f2">fprintf(stderr,</span> <span style="color: #e6db74">"socket failed!</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">);</span>
+        <span style="color: #f8f8f2">exit(</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">);</span>
 
-    <span style="color: #cccccc">}</span>  
-    <span style="color: #000080">//获取所有网络接口列表</span>
-    <span style="color: #cdcd00">if</span> <span style="color: #cccccc">(ioctl(sock,</span> <span style="color: #cccccc">SIOCGIFCONF,</span> <span style="color: #3399cc">&amp;</span><span style="color: #cccccc">ifConf)</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cd00cd">0</span> <span style="color: #cccccc">)</span>
-    <span style="color: #cccccc">{</span>
-            <span style="color: #cccccc">fprintf(stderr,</span> <span style="color: #cd0000">"ioctl SIOCGIFCONF failed!\n"</span><span style="color: #cccccc">);</span>
-            <span style="color: #cccccc">exit(</span><span style="color: #3399cc">-</span><span style="color: #cd00cd">1</span><span style="color: #cccccc">);</span>
+    <span style="color: #f8f8f2">}</span>  
+    <span style="color: #75715e">//获取所有网络接口列表</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(ioctl(sock,</span> <span style="color: #f8f8f2">SIOCGIFCONF,</span> <span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">ifConf)</span> <span style="color: #f92672">&lt;</span> <span style="color: #ae81ff">0</span> <span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">{</span>
+            <span style="color: #f8f8f2">fprintf(stderr,</span> <span style="color: #e6db74">"ioctl SIOCGIFCONF failed!</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">);</span>
+            <span style="color: #f8f8f2">exit(</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">);</span>
 
-    <span style="color: #cccccc">}</span>
-    <span style="color: #cccccc">printf(</span><span style="color: #cd0000">"Len: %d \n"</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">ifConf.ifc_len);</span> 
+    <span style="color: #f8f8f2">}</span>
+    <span style="color: #f8f8f2">printf(</span><span style="color: #e6db74">"Len: %d </span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">ifConf.ifc_len);</span> 
 
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span> <span style="color: #3399cc">*</span><span style="color: #cccccc">ifPt;</span>
-    <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span> <span style="color: #3399cc">*</span><span style="color: #cccccc">ifEndPt;</span> 
-    <span style="color: #cccccc">ifPt</span> <span style="color: #3399cc">=</span> <span style="color: #cccccc">(</span><span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span><span style="color: #3399cc">*</span><span style="color: #cccccc">)ifVec;</span> 
-    <span style="color: #cccccc">ifEndPt</span> <span style="color: #3399cc">=</span> <span style="color: #cccccc">(</span><span style="color: #00cd00">void</span> <span style="color: #3399cc">*</span><span style="color: #cccccc">)((</span><span style="color: #00cd00">char</span> <span style="color: #3399cc">*</span><span style="color: #cccccc">)ifVec</span> <span style="color: #3399cc">+</span> <span style="color: #cccccc">ifConf.ifc_len);</span>
-    <span style="color: #cdcd00">for</span> <span style="color: #cccccc">(ifPt</span> <span style="color: #3399cc">=</span> <span style="color: #cccccc">ifVec;</span> <span style="color: #cccccc">ifPt</span> <span style="color: #3399cc">&lt;</span> <span style="color: #cccccc">ifEndPt;</span> <span style="color: #cccccc">ifPt</span><span style="color: #3399cc">++</span><span style="color: #cccccc">)</span>
-    <span style="color: #cccccc">{</span>  
-        <span style="color: #cdcd00">struct</span> <span style="color: #cccccc">ifreq</span> <span style="color: #cccccc">ifReq;</span> 
-        <span style="color: #cdcd00">if</span> <span style="color: #cccccc">(</span> <span style="color: #cccccc">ifPt</span><span style="color: #3399cc">-&gt;</span><span style="color: #cccccc">ifr_addr.sa_family</span> <span style="color: #3399cc">!=</span> <span style="color: #cccccc">AF_INET</span>  <span style="color: #cccccc">)</span>  
-                <span style="color: #cdcd00">continue</span><span style="color: #cccccc">;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span> <span style="color: #f92672">*</span><span style="color: #f8f8f2">ifPt;</span>
+    <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span> <span style="color: #f92672">*</span><span style="color: #f8f8f2">ifEndPt;</span> 
+    <span style="color: #f8f8f2">ifPt</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(</span><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">)ifVec;</span> 
+    <span style="color: #f8f8f2">ifEndPt</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(</span><span style="color: #66d9ef">void</span> <span style="color: #f92672">*</span><span style="color: #f8f8f2">)((</span><span style="color: #66d9ef">char</span> <span style="color: #f92672">*</span><span style="color: #f8f8f2">)ifVec</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">ifConf.ifc_len);</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">(ifPt</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">ifVec;</span> <span style="color: #f8f8f2">ifPt</span> <span style="color: #f92672">&lt;</span> <span style="color: #f8f8f2">ifEndPt;</span> <span style="color: #f8f8f2">ifPt</span><span style="color: #f92672">++</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">{</span>  
+        <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">ifreq</span> <span style="color: #f8f8f2">ifReq;</span> 
+        <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(</span> <span style="color: #f8f8f2">ifPt</span><span style="color: #f92672">-&gt;</span><span style="color: #f8f8f2">ifr_addr.sa_family</span> <span style="color: #f92672">!=</span> <span style="color: #f8f8f2">AF_INET</span>  <span style="color: #f8f8f2">)</span>  
+                <span style="color: #66d9ef">continue</span><span style="color: #f8f8f2">;</span>
 
-        <span style="color: #000080">/*  打印ip地址  */</span>
-        <span style="color: #cccccc">printf(</span><span style="color: #cd0000">"%s\n"</span><span style="color: #cccccc">,</span> <span style="color: #cccccc">inet_ntoa(((</span><span style="color: #cdcd00">struct</span> <span style="color: #cccccc">sockaddr_in</span><span style="color: #3399cc">*</span><span style="color: #cccccc">)</span><span style="color: #3399cc">&amp;</span><span style="color: #cccccc">(ifPt</span><span style="color: #3399cc">-&gt;</span><span style="color: #cccccc">ifr_addr))</span><span style="color: #3399cc">-&gt;</span><span style="color: #cccccc">sin_addr));</span>
-     <span style="color: #cccccc">}</span>
+        <span style="color: #75715e">/*  打印ip地址  */</span>
+        <span style="color: #f8f8f2">printf(</span><span style="color: #e6db74">"%s</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">"</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">inet_ntoa(((</span><span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">sockaddr_in</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">(ifPt</span><span style="color: #f92672">-&gt;</span><span style="color: #f8f8f2">ifr_addr))</span><span style="color: #f92672">-&gt;</span><span style="color: #f8f8f2">sin_addr));</span>
+     <span style="color: #f8f8f2">}</span>
 
-    <span style="color: #cdcd00">return</span> <span style="color: #cd00cd">0</span><span style="color: #cccccc">;</span>
- <span style="color: #cccccc">}</span>  
+    <span style="color: #66d9ef">return</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span>
+ <span style="color: #f8f8f2">}</span>  
 </pre></div>
 <p>结果如下</p>
-<div class="codehilite" style="background: #000000"><pre style="line-height: 125%">windeal@ubuntu:Windeal$ ./a.out
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">windeal@ubuntu:Windeal$ ./a.out
 Len: 320
 Len: 64
 127.0.0.1
@@ -476,11 +476,11 @@ Len: 64
     <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
     <ul class="tagcloud">
             <a class="tag-4" href="http://windeal.github.io/tag/linux.html">Linux</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
             <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
             <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
             <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
             <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
     </ul>
     </li>
