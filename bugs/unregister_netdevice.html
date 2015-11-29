@@ -62,7 +62,7 @@ Windeal_Blog            </a>
                     </a>
                     <ul class="dropdown-menu">
 <li >
-                            <a href="http://windeal.github.io/pelican/index.html">Pelican(2)</a>
+                            <a href="http://windeal.github.io/web/index.html">前端(2)</a>
                             </li>
 <li class="active">
                             <a href="http://windeal.github.io/bugs/index.html">Bug收录(1)</a>
@@ -127,31 +127,28 @@ Windeal_Blog            </a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <h2 id="description">Description：</h2>
-<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">路由器仅有一张网卡，phy0，通过vlan划分WAN端和LAN端
+                <div class="codehilite" style="background: #272822"><pre style="line-height: 125%">前段日子在做vlan的时候遇见一个麻烦，问题大致是这样的：
 </pre></div>
+<h2 id="description">Description：</h2>
+<p>路由器仅有一张网卡，phy0，通过vlan划分WAN端和LAN端。</p>
 <div class="codehilite" style="background: #272822"><pre style="line-height: 125%">    vconfig add phy0 1  #lan phy0.1
     vconfig add phy0 2 #wan phy0.2，（我通过ip link改了名字，使得phy0.2 更名为eth1）
 </pre></div>
-<p>然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误：
-unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了。</p>
-<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">碰上问题时，进行了些分析，其间走了不少弯路，这里也顺便提下走的弯路了。
-</pre></div>
+<p>然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误：<code>unregister_netdevice: waiting for eth1 to become free？</code>，然后板子就宕掉了。</p>
+<p>碰上问题时，进行了些分析，其间走了不少弯路，这里也顺便提下走的弯路了。</p>
 <h2 id="analyse-1">Analyse 1：</h2>
-<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">应该是由程序占用了eth1，那么，先找出占用它的程序。
-首先看了下所有正在运行的进程，kill掉比较可能的进程，rmmod掉可能占用eth1的模块（包括一个名为enet的模块，这里先提一下，因为最后分析出来其实是enet模块导致了这个错误）。结果执行vconfig rem eth1 命令还是会出现错误，并宕机。
-接着通过循环，kill掉所有能kill掉的进程，问题依然没有解决。
-</pre></div>
+<p>应该是由程序占用了eth1，那么，先找出占用它的程序。
+　　首先看了下所有正在运行的进程，kill掉比较可能的进程，rmmod掉可能占用eth1的模块（包括一个名为enet的模块，这里先提一下，因为最后分析出来其实是enet模块导致了这个错误）。结果执行<code>vconfig rem eth1</code> 命令还是会出现错误，并宕机。
+　　接着通过循环，kill掉所有能kill掉的进程，问题依然没有解决。</p>
 <h2 id="analyse-2">Analyse 2：</h2>
-<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">查资料，发现错误现象应该是：eth1设备的引用计数不为0，导致eth1的除名函数在netdev_run_todo中陷入死循环（循环判断eth1的引用计数是否为0），然后导致程序宕机。
-乍一看，跟Analyse1 的分析结果差不多，其实不然。
- 其主要区别在于：
-    在Analyse 1中，我们认为，eth1是否程序占用了，那么我们把程序down/kill掉，就可以解除占用。而在Analyse 2中，eth1引用计数不为0，不一定是eth1被占用了，也可能因为占用它的程序/模块在自身down掉的时候，没有吧引用计数减一造成的。
-在网上查了好久，出现unregister_netdevice: waiting for eth1 to become free？的原因可能是某一处代码中使用了dev_hold而没有使用dev_put。
-dev_hold和dev_put是配对使用的，一个用来引用计数加一，一个用于引用计数减一。
-查看模块代码，没有发现单独直接使用dev_hold的情况。那会不会是简介调用呢，仔细查找了好久，果然是间接调用。
-在我们一些模块代码中，经常会通过dev_get_by_name来获取设备信息。而dev_get_by_name封装了dev_hold，导致引用计数加一。由于dev_get_by_name是内核提供的接口，不熟悉的coder很可能不晓得这点，也没有注意到需要调用dev_put.，于是便有了上面所说的错误。
-</pre></div>
+<p>查资料，发现错误现象应该是：eth1设备的引用计数不为0，导致eth1的除名函数在<code>netdev_run_todo</code>中陷入死循环（循环判断eth1的引用计数是否为0），然后导致程序宕机。
+　　乍一看，跟Analyse1 的分析结果差不多，其实不然。
+　　其主要区别在于：
+　　在Analyse 1中，我们认为，eth1是否程序占用了，那么我们把程序down/kill掉，就可以解除占用。而在Analyse 2中，eth1引用计数不为0，不一定是eth1被占用了，也可能因为占用它的程序/模块在自身down掉的时候，没有吧引用计数减一造成的。
+　　在网上查了好久，出现<code>unregister_netdevice: waiting for eth1 to become free？</code>的原因可能是某一处代码中使用了<code>dev_hold</code>而没有使用<code>dev_put</code>。
+　　<code>dev_hold</code>和<code>dev_put</code>是配对使用的，一个用来引用计数加一，一个用于引用计数减一。
+　　查看模块代码，没有发现单独直接使用dev_hold的情况。那会不会是简介调用呢，仔细查找了好久，果然是间接调用。
+　　在我们一些模块代码中，经常会通过<code>dev_get_by_name</code>来获取设备信息。而<code>dev_get_by_name</code>封装了<code>dev_hold</code>，导致引用计数加一。由于<code>dev_get_by_name</code>是内核提供的接口，不熟悉的coder很可能不晓得这点，也没有注意到需要调用<code>dev_put</code>.，于是便有了上面所说的错误。</p>
             </div>
             <!-- /.entry-content -->
 <br/>
@@ -234,13 +231,13 @@ dev_hold和dev_put是配对使用的，一个用来引用计数加一，一个�
     <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
     <ul class="tagcloud">
             <a class="tag-4" href="http://windeal.github.io/tag/wang-luo-nei-he.html">网络，内核</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
             <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
             <a class="tag-2" href="http://windeal.github.io/tag/linux.html">Linux</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
     </ul>
     </li>
 </section>
