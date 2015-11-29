@@ -58,6 +58,9 @@ Windeal_Blog            </a>
                             <a href="http://windeal.github.io/pelican/index.html">Pelican(2)</a>
                             </li>
 <li >
+                            <a href="http://windeal.github.io/bugs/index.html">Bug收录(1)</a>
+                            </li>
+<li >
                             <a href="http://windeal.github.io/others/index.html">其他(1)</a>
                             </li>
 <li >
@@ -82,6 +85,14 @@ Windeal_Blog            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
+            <article>
+                <h2><a href="http://windeal.github.io/bugs/unregister_netdevice.html">unregister_netdevice: waiting for eth1 to become free？错误</a></h2>
+                <div class="summary"><p>然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误： unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了
+前段日子在做vlan的时候遇见一个麻烦，问题大致是这样的：</p>
+                    <a class="btn btn-default btn-xs" href="http://windeal.github.io/bugs/unregister_netdevice.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
             <article>
                 <h2><a href="http://windeal.github.io/unixcoding/ioctlGetifconf.html">ioctl 获取网络接口信息</a></h2>
                 <div class="summary"><p>网络程序（尤其是服务器程序）经常在程序启动后使用ioctl后去所在主机的全部网络接口想你系。包括：接口地址、是否支持广播、是否支持多播等。本文主要介绍ioctl的一些基本知识，以及如何使用ioctl获取网络接口信&gt; ioctl是用来操纵特殊文件的底层设备参数。我们看下ioctl的用法:</p>
@@ -145,13 +156,14 @@ Windeal_Blog            </a>
 <section class="well" id="tag_cloud">
     <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
     <ul class="tagcloud">
-            <a class="tag-4" href="http://windeal.github.io/tag/linux.html">Linux</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
             <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
             <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
             <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/wang-luo-nei-he.html">网络，内核</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
+            <a class="tag-2" href="http://windeal.github.io/tag/linux.html">Linux</a>
     </ul>
     </li>
 </section>
