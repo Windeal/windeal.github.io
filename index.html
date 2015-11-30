@@ -64,6 +64,9 @@ Windeal_Blog            </a>
                             <a href="http://windeal.github.io/others/index.html">其他(1)</a>
                             </li>
 <li >
+                            <a href="http://windeal.github.io/programming/index.html">程序设计(1)</a>
+                            </li>
+<li >
                             <a href="http://windeal.github.io/tcpip/index.html">Tcp/ip详解(1)</a>
                             </li>
 <li >
@@ -85,6 +88,13 @@ Windeal_Blog            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
+            <article>
+                <h2><a href="http://windeal.github.io/programming/dowhile0.html">do {...} while (0) 在宏定义中的作用</a></h2>
+                <div class="summary"><p>在Linux内核、一些C库、以及我们的程序中，经常会出现如下的<code>do {...} while (0)</code>宏定义格式：</p>
+                    <a class="btn btn-default btn-xs" href="http://windeal.github.io/programming/dowhile0.html">more ...</a>
+                </div>
+            </article>
+            <hr/>
             <article>
                 <h2><a href="http://windeal.github.io/bugs/unregister_netdevice.html">unregister_netdevice: waiting for eth1 to become free？错误</a></h2>
                 <div class="summary"><p>然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误： unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了
@@ -122,14 +132,16 @@ Windeal_Blog            </a>
                 </div>
             </article>
             <hr/>
-            <article>
-                <h2><a href="http://windeal.github.io/web/pelican_basic.html">pelican 介绍——基础篇</a></h2>
-                <div class="summary"><p>pelican是基于python的一个静态博客生成器，可以通过markdown编写md文件，然后用pelican生成html，最后部署在github pages上，作为个人博客. pelican安装　关于pelican的安装网上已经有很多材料了（也可以查看官方文档<a href="http://docs.getpelican.com/en/3.6.0/quickstart.html#installation">pelican官方文档</a>)。pip install pelican markdown` pelican和markdown是通过pip工具安装的，这里可能还需要安装pip极其依赖库什么的。我安装的时候比较顺利的，没遇到什么比较大的问题。</p>
-                    <a class="btn btn-default btn-xs" href="http://windeal.github.io/web/pelican_basic.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
 
+        <ul class="pagination">
+                <li class="prev disabled"><a href="#">&laquo;</a></li>
+                    <li class="active"><a
+                            href="http://windeal.github.io/index.html">1</a></li>
+                    <li class=""><a
+                            href="http://windeal.github.io/index2.html">2</a></li>
+                <li class="next"><a
+                        href="http://windeal.github.io/index2.html">&raquo;</a></li>
+        </ul>
         </div>
         <div class="col-sm-3" id="sidebar">
             <aside>
@@ -156,14 +168,15 @@ Windeal_Blog            </a>
 <section class="well" id="tag_cloud">
     <li class="list-group-item"><a href="http://windeal.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
     <ul class="tagcloud">
-            <a class="tag-4" href="http://windeal.github.io/tag/wang-luo-nei-he.html">网络，内核</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
-            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
-            <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
             <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
             <a class="tag-2" href="http://windeal.github.io/tag/linux.html">Linux</a>
             <a class="tag-4" href="http://windeal.github.io/tag/mac.html">MAC</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/wireless.html">wireless</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/cc.html">C/C++</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/wang-luo-nei-he.html">网络，内核</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
     </ul>
     </li>
 </section>
