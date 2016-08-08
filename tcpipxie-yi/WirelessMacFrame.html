@@ -9,7 +9,7 @@
 
 
 
-<link rel="canonical" href="http://windeal.github.io/tcpip/WirelessMacFrame.html">
+<link rel="canonical" href="http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html">
 
         <meta name="author" content="Windeal.Li" />
         <meta name="keywords" content="wireless,MAC" />
@@ -18,10 +18,10 @@
         <meta property="og:site_name" content="Windeal_Blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="无线MAC帧详解"/>
-        <meta property="og:url" content="http://windeal.github.io/tcpip/WirelessMacFrame.html"/>
+        <meta property="og:url" content="http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html"/>
         <meta property="og:description" content="Mac帧由三个基本域组成 Mac Header Frame Body FCS Frame Ctrl Frame 含2Byte（16位），可以进一步分为以下子字段："/>
         <meta property="article:published_time" content="2015-11-05" />
-            <meta property="article:section" content="tcpip" />
+            <meta property="article:section" content="TCPIP协议" />
             <meta property="article:tag" content="wireless" />
             <meta property="article:tag" content="MAC" />
             <meta property="article:author" content="Windeal.Li" />
@@ -70,10 +70,10 @@ Windeal_Blog            </a>
 <li >
                             <a href="http://windeal.github.io/others/index.html">其他(1)</a>
                             </li>
-<li class="active">
+<li >
                             <a href="http://windeal.github.io/tcpip/index.html">Tcp/ip详解(1)</a>
                             </li>
-<li >
+<li class="active">
                             <a href="http://windeal.github.io/tcpipxie-yi/index.html">Tcpip协议(1)</a>
                             </li>
 <li >
@@ -99,7 +99,7 @@ Windeal_Blog            </a>
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="http://windeal.github.io/tcpip/WirelessMacFrame.html"
+                    <a href="http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html"
                        rel="bookmark"
                        title="Permalink to 无线MAC帧详解">
                         无线MAC帧详解
@@ -120,7 +120,7 @@ Windeal_Blog            </a>
             <a href="http://windeal.github.io/author/windealli.html"><i class="fa fa-user"></i> Windeal.Li</a>
 
 <span class="label label-default">Category</span>
-        <a href="http://windeal.github.io/tcpip/index.html">TCP/IP详解</a>
+        <a href="http://windeal.github.io/tcpipxie-yi/index.html">TCPIP协议</a>
 
 
 <span class="label label-default">Tags</span>
@@ -128,40 +128,17 @@ Windeal_Blog            </a>
         /
 	<a href="http://windeal.github.io/tag/mac.html">MAC</a>
     <span class="label label-default">Lang</span>
-	<a href="http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html">zh</a>
+	<a href="http://windeal.github.io/tcpip/WirelessMacFrame.html">zh</a>
 
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <div class="toc">
-<ul>
-<li><a href="#80211-macmac">802.11 MAC帧（无线MAC帧）</a><ul>
-<li><a href="#frame-ctrl">Frame Ctrl</a></li>
-<li><a href="#durationid">Duration/ID</a></li>
-<li><a href="#address-address1address4">Address (Address1~Address4)</a></li>
-<li><a href="#seqctrl">SeqCtrl</a></li>
-<li><a href="#qos-ctrl">Qos Ctrl(可选)</a></li>
-<li><a href="#ht-control">HT Control(可选)</a></li>
-<li><a href="#frame-body">Frame Body</a></li>
-<li><a href="#fcs">FCS</a></li>
-<li><a href="#_1">帧类型</a><ul>
-<li><a href="#_2">数据帧</a></li>
-<li><a href="#_3">控制帧</a></li>
-<li><a href="#_4">管理帧</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-<h1 id="80211-macmac">802.11 MAC帧（无线MAC帧）</h1>
+                <h1 id="80211-macmac">802.11 MAC帧（无线MAC帧）</h1>
 <p><img alt="Paste_Image.png" src="/static/images/TCPIP/wirelessMacFrame01.png"/></p>
-<p>Mac帧由三个基本域组成：</p>
-<ul>
-<li><strong>Mac Header：</strong>包括帧控制（ Frame Control） 、 时长（ Duration） 、 地址（ Address） 等</li>
-<li><strong>Frame Body：</strong>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（ sub type） 决定。</li>
-<li><strong>FCS：</strong>    （ Frame Check Sequence， 帧校验序列） 用于保障帧数据完整性。
-　　我们主要关注Mac Header部门，我们来逐个分析下Mac Header中的字段</li>
-</ul>
+<p>Mac帧由三个基本域组成：
++ <strong>Mac Header：</strong>包括帧控制（ Frame Control） 、 时长（ Duration） 、 地址（ Address） 等
++ <strong>Frame Body：</strong>代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（ sub type） 决定。
++ <strong>FCS：</strong>    （ Frame Check Sequence， 帧校验序列） 用于保障帧数据完整性。
+　　我们主要关注Mac Header部门，我们来逐个分析下Mac Header中的字段</p>
 <h3 id="frame-ctrl">Frame Ctrl</h3>
 <p>Frame 含2Byte（16位），可以进一步分为以下子字段：</p>
 <p><strong>(1) Protocol Version：</strong>
@@ -380,11 +357,9 @@ Windeal_Blog            </a>
 </tbody>
 </table>
 <h3 id="seqctrl">SeqCtrl</h3>
-<p>此字段用来丢弃重复帧和重复分片。包含两个子字段：Fragment Number 和Sequence Number。</p>
-<ul>
-<li><strong>Fragment Number：</strong>用于分片帧</li>
-<li><strong>Sequence Number：</strong>用于检验重复帧。如果设备收到的MAC帧的Sequence Number与之前收到的帧重复则丢弃。</li>
-</ul>
+<p>此字段用来丢弃重复帧和重复分片。包含两个子字段：Fragment Number 和Sequence Number。
++ <strong>Fragment Number：</strong>用于分片帧
++ <strong>Sequence Number：</strong>用于检验重复帧。如果设备收到的MAC帧的Sequence Number与之前收到的帧重复则丢弃。</p>
 <h3 id="qos-ctrl">Qos Ctrl(可选)</h3>
 <p>此字段只出现在数据帧中，用以实现802.11e无限Qos功能。</p>
 <h3 id="ht-control">HT Control(可选)</h3>
@@ -416,33 +391,13 @@ Windeal_Blog            </a>
 </tbody>
 </table>
 <h3 id="_1_2">控制帧</h3>
-<p>控制帧主要用来协助数据帧的传输，负责无线区域的清空，信道的获取等，还用于收取数据时的确认。下面是几种常用的控制帧。</p>
-<table>
-<thead>
-<tr>
-<th>帧类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RTS/CTS</td>
-<td>负责无限信道的清空，取得媒介控制权</td>
-</tr>
-<tr>
-<td>PS-Poll</td>
-<td>当Station从省电模式醒来，可以发送PS-Poll帧，从基站获取缓存帧</td>
-</tr>
-<tr>
-<td>ACK</td>
-<td>无线通信接收端通过回应ACK帧，向发送端确认接收到了报文</td>
-</tr>
-<tr>
-<td>Block Ack Request/ Block Ack</td>
-<td>802.11n中，为了提升MAC层的效率，使用BlockACK机制对收到的一批数据帧进行一次性确认， Block Ack Request/ Block Ack用来简历BlockACK通道</td>
-</tr>
-</tbody>
-</table>
+<p>控制帧主要用来协助数据帧的传输，负责无线区域的清空，信道的获取等，还用于收取数据时的确认。下面是几种常用的控制帧。
+| 帧类型      |　描述　     |
+ |-----------|-------------|
+| RTS/CTS   | 负责无限信道的清空，取得媒介控制权 |
+| PS-Poll     | 当Station从省电模式醒来，可以发送PS-Poll帧，从基站获取缓存帧 |
+| ACK          |  无线通信接收端通过回应ACK帧，向发送端确认接收到了报文  |
+| Block Ack Request/ Block Ack| 802.11n中，为了提升MAC层的效率，使用BlockACK机制对收到的一批数据帧进行一次性确认， Block Ack Request/ Block Ack用来简历BlockACK通道 |</p>
 <h3 id="_1_2_3">管理帧</h3>
 <p>负责对无线网络的管理，包括网络信息通告、加入或退出无线网络，频谱管理等。</p>
 <table>
@@ -488,8 +443,8 @@ Windeal_Blog            </a>
 <h4>
         <ul>
                 <li>
-                    上一篇:<a href="http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html">
-                        无线MAC帧详解
+                    上一篇:<a href="http://windeal.github.io/others/nothing.html">
+                        个人简介
                     </a>
                 </li>
         </ul>
@@ -499,8 +454,8 @@ Windeal_Blog            </a>
 <h4>
         <ul>
                 <li>
-                    下一篇:<a href="http://windeal.github.io/unixcoding/ioctlGetifconf.html">
-                        ioctl 获取网络接口信息
+                    下一篇:<a href="http://windeal.github.io/tcpip/WirelessMacFrame.html">
+                        无线MAC帧详解
                     </a>
                 </li>
         </ul>
@@ -516,7 +471,7 @@ Windeal_Blog            </a>
             var duoshuo_shortname = 'windeal4github'; // required: replace example with your forum shortname
 
                     var duoshuo_identifier = 'WirelessMacFrame';
-                var duoshuo_url = 'http://windeal.github.io/tcpip/WirelessMacFrame.html';
+                var duoshuo_url = 'http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html';
 
             var duoshuo_config = function () {
                 this.language = "zh";
@@ -600,7 +555,7 @@ Windeal_Blog            </a>
 <section>
     <h3><B>相关文章:</B></h3>
     <ul>
-        <li><a href="http://windeal.github.io/tcpipxie-yi/WirelessMacFrame.html">无线MAC帧详解</a></li>
+        <li><a href="http://windeal.github.io/tcpip/WirelessMacFrame.html">无线MAC帧详解</a></li>
     </ul>
 </section>
     
