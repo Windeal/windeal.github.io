@@ -5,21 +5,21 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>http://windeal.github.io/</loc>
-<lastmod>2016-08-08T23:07:01-00:00</lastmod>
+<lastmod>2016-08-08T23:09:32-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://windeal.github.io/archives.html</loc>
-<lastmod>2016-08-08T23:07:01-00:00</lastmod>
+<lastmod>2016-08-08T23:09:32-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>http://windeal.github.io/categories.html</loc>
-<lastmod>2016-08-08T23:07:01-00:00</lastmod>
+<lastmod>2016-08-08T23:09:32-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -74,21 +74,21 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>http://windeal.github.io/pelican/pelican_advance.html</loc>
+<loc>http://windeal.github.io/qian-duan/pelican_advance.html</loc>
 <lastmod>2015-08-05T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>http://windeal.github.io/pelican/pelican_basic.html</loc>
+<loc>http://windeal.github.io/qian-duan/pelican_basic.html</loc>
 <lastmod>2015-08-05T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>http://windeal.github.io/pelican/index.html</loc>
+<loc>http://windeal.github.io/qian-duan/index.html</loc>
 <lastmod>2015-08-05T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
