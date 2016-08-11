@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>unregister_netdevice: waiting for eth1 to become free？错误 - Windeal_Blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://windeal.github.io/bugs/unregister_netdevice.html">
+
+        <meta name="author" content="Windeal.Li" />
+        <meta name="keywords" content="Linux,网络，内核" />
+        <meta name="description" content="然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误： unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了 前段日子在做vlan的时候遇见一个麻烦，问题大致是这样的：" />
+
+        <meta property="og:site_name" content="Windeal_Blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="unregister_netdevice: waiting for eth1 to become free？错误"/>
+        <meta property="og:url" content="http://windeal.github.io/bugs/unregister_netdevice.html"/>
+        <meta property="og:description" content="然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误： unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了 前段日子在做vlan的时候遇见一个麻烦，问题大致是这样的："/>
+        <meta property="article:published_time" content="2015-11-29" />
+            <meta property="article:section" content="bugs" />
+            <meta property="article:tag" content="Linux" />
+            <meta property="article:tag" content="网络，内核" />
+            <meta property="article:author" content="Windeal.Li" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://windeal.github.io/theme/css/bootstrap.min.css" type="text/css"/>
+    <link href="http://windeal.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://windeal.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://windeal.github.io/theme/css/style.css" type="text/css"/>
+        <link href="http://windeal.github.io/static/css/mystyle.css" rel="stylesheet">
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://windeal.github.io/" class="navbar-brand">
+Windeal_Blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">  
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Blog分类<b class="caret"></b>  
+                    </a>
+                    <ul class="dropdown-menu">
+<li >
+                            <a href="http://windeal.github.io/qian-duan/index.html">前端(2)</a>
+                            </li>
+<li class="active">
+                            <a href="http://windeal.github.io/bugs/index.html">Bug收录(1)</a>
+                            </li>
+<li >
+                            <a href="http://windeal.github.io/others/index.html">其他(1)</a>
+                            </li>
+<li >
+                            <a href="http://windeal.github.io/tcpip/index.html">Tcp/ip详解(1)</a>
+                            </li>
+<li >
+                            <a href="http://windeal.github.io/tcpipxie-yi/index.html">Tcpip协议(1)</a>
+                            </li>
+<li >
+                            <a href="http://windeal.github.io/unixcoding/index.html">Unix环境编程(1)</a>
+                            </li>
+                    </ul>
+                </li>
+                    <li><a href="/About.html">About Me</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://windeal.github.io/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://windeal.github.io/bugs/unregister_netdevice.html"
+                       rel="bookmark"
+                       title="Permalink to unregister_netdevice: waiting for eth1 to become free？错误">
+                        unregister_netdevice: waiting for eth1 to become free？错误
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2015-11-29T00:00:00+08:00"> 2015-11-29</time>
+    </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="http://windeal.github.io/author/windealli.html"><i class="fa fa-user"></i> Windeal.Li</a>
+
+<span class="label label-default">Category</span>
+        <a href="http://windeal.github.io/bugs/index.html">Bug收录</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://windeal.github.io/tag/linux.html">Linux</a>
+        /
+	<a href="http://windeal.github.io/tag/wang-luo-nei-he.html">网络，内核</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2 id="description">Description：</h2>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">路由器仅有一张网卡，phy0，通过vlan划分WAN端和LAN端
+</pre></div>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">    vconfig add phy0 1  #lan phy0.1
+    vconfig add phy0 2 #wan phy0.2，（我通过ip link改了名字，使得phy0.2 更名为eth1）
+</pre></div>
+<p>然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误：
+unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了。</p>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">碰上问题时，进行了些分析，其间走了不少弯路，这里也顺便提下走的弯路了。
+</pre></div>
+<h2 id="analyse-1">Analyse 1：</h2>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">应该是由程序占用了eth1，那么，先找出占用它的程序。
+首先看了下所有正在运行的进程，kill掉比较可能的进程，rmmod掉可能占用eth1的模块（包括一个名为enet的模块，这里先提一下，因为最后分析出来其实是enet模块导致了这个错误）。结果执行vconfig rem eth1 命令还是会出现错误，并宕机。
+接着通过循环，kill掉所有能kill掉的进程，问题依然没有解决。
+</pre></div>
+<h2 id="analyse-2">Analyse 2：</h2>
+<div class="codehilite" style="background: #272822"><pre style="line-height: 125%">查资料，发现错误现象应该是：eth1设备的引用计数不为0，导致eth1的除名函数在netdev_run_todo中陷入死循环（循环判断eth1的引用计数是否为0），然后导致程序宕机。
+乍一看，跟Analyse1 的分析结果差不多，其实不然。
+ 其主要区别在于：
+    在Analyse 1中，我们认为，eth1是否程序占用了，那么我们把程序down/kill掉，就可以解除占用。而在Analyse 2中，eth1引用计数不为0，不一定是eth1被占用了，也可能因为占用它的程序/模块在自身down掉的时候，没有吧引用计数减一造成的。
+在网上查了好久，出现unregister_netdevice: waiting for eth1 to become free？的原因可能是某一处代码中使用了dev_hold而没有使用dev_put。
+dev_hold和dev_put是配对使用的，一个用来引用计数加一，一个用于引用计数减一。
+查看模块代码，没有发现单独直接使用dev_hold的情况。那会不会是简介调用呢，仔细查找了好久，果然是间接调用。
+在我们一些模块代码中，经常会通过dev_get_by_name来获取设备信息。而dev_get_by_name封装了dev_hold，导致引用计数加一。由于dev_get_by_name是内核提供的接口，不熟悉的coder很可能不晓得这点，也没有注意到需要调用dev_put.，于是便有了上面所说的错误。
+</pre></div>
+            </div>
+            <!-- /.entry-content -->
+<br/>
+<br/>
+<br/>
+    <nav class="older">
+<h4>
+        <ul>
+                <li>
+                    上一篇:<a href="http://windeal.github.io/unixcoding/ioctlGetifconf.html">
+                        ioctl 获取网络接口信息
+                    </a>
+                </li>
+        </ul>
+</h4>
+    </nav>
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div class="ds-thread" data-thread-key="<%= page.path %>" data-title="<%= page.title %>" data-url="<%= page.permalink %>"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var duoshuo_shortname = 'windeal4github'; // required: replace example with your forum shortname
+
+                    var duoshuo_identifier = 'unregister_netdevice';
+                var duoshuo_url = 'http://windeal.github.io/bugs/unregister_netdevice.html';
+
+            var duoshuo_config = function () {
+                this.language = "zh";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://duoshuo.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://duoshuo.com" class="dsq-brlink">comments powered by <span class="logo-duoshuo">Duoshuo</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+
+<!--  去掉侧边栏的灰色背景
+<section class="well well-sm">
+-->
+<section>
+    <ul class="list-group list-group-flush">
+
+
+
+
+
+    <li class="list-group-item"><h3><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h3>
+      <ul class="list-group" id="links" style="padding-left:15px;">
+        <li>
+            <a href="http://blog.csdn.net/windeal3203" target="_blank">
+                CSDN博客
+            </a>
+        </li>
+        <li>
+            <a href="http://coolshell.cn/" target="_blank">
+                酷壳
+            </a>
+        </li>
+        <li>
+            <a href="http://cocode.cc/" target="_blank">
+                CoCode
+            </a>
+        </li>
+      </ul>
+    </li>
+ 
+    </ul>
+</section>
+
+<!--  去掉侧边栏的灰色背景
+<section class="well well-sm" id="tag_cloud">
+-->
+<section>
+    <li class="list-group-item"><a href="http://windeal.github.io/"><h3><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h3></a>
+    <ul class="tagcloud" style="padding-left: 15px;">
+            <a class="tag-1" href="http://windeal.github.io/tag/github.html">github</a>
+            <a class="tag-2" href="http://windeal.github.io/tag/wireless.html">wireless</a>
+            <a class="tag-1" href="http://windeal.github.io/tag/pelican.html">pelican</a>
+            <a class="tag-2" href="http://windeal.github.io/tag/mac.html">MAC</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/wang-luo-nei-he.html">网络，内核</a>
+            <a class="tag-2" href="http://windeal.github.io/tag/linux.html">Linux</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/ioctl.html">ioctl</a>
+            <a class="tag-4" href="http://windeal.github.io/tag/unix.html">Unix</a>
+    </ul>
+    </li>
+</section>
+
+<!--  去掉侧边栏的灰色背景
+<section class="well" id="related-posts">
+-->
+<section>
+    <h3><B>相关文章:</B></h3>
+    <ul>
+        <li><a href="http://windeal.github.io/unixcoding/ioctlGetifconf.html">ioctl 获取网络接口信息</a></li>
+    </ul>
+</section>
+    
+<!--  去掉侧边栏的灰色背景
+<section class="well well-sm" id="tag_cloud">
+-->
+<section>
+</section>
+
+            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2015 Windeal.Li
+            &middot; Powered by <a href="https://github.com/DandyDev/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://windeal.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://windeal.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://windeal.github.io/theme/js/respond.min.js"></script>
+
+
+<!-- 多说评论框 start -- >
+    <div class="ds-thread"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+var duoshuoQuery = {short_name:"windeal4github"};
+(function() {
+        var ds = document.createElement('script');
+                ds.type = 'text/javascript';ds.async = true;
+                        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                                ds.charset = 'UTF-8';
+                                        (document.getElementsByTagName('head')[0] 
+                                                 || document.getElementsByTagName('body')[0]).appendChild(ds);
+                                            
+ })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+ 
+<noscript>
+    Please enable JavaScript to view the comments powered by <a href="http://duoshuo.com/">DuoShuo</a>.
+</noscript>    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-69553724-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- End Google Analytics Code -->
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-69553724-1', 'UA-69553724-1');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+</body>
+</html>
