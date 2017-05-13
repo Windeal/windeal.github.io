@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>pelican 介绍——基础篇 &mdash; Windeal's Home</title>
+  <meta name="author" content="Windeal">
+
+
+
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.png" rel="icon">
+
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Windeal's Home</a></h1>
+</hgroup></header>
+  <nav role="navigation"><style>
+/* 下拉按钮样式 */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* 容器 <div> - 需要定位下拉内容 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* 下拉内容 (默认隐藏) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* 下拉菜单的链接 */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* 在鼠标移上去后显示下拉菜单 */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 当下拉内容显示后修改下拉按钮的背景颜色 */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+</style>
+
+<ul class="subscription" data-subscription="rss">
+</ul>
+
+
+<ul class="main-navigation">
+    <li><a href="/">我的博客</a></li>
+  	<li class="dropdown">
+		<a href="#" class="dropbtn">BLog<b class="caret"></b></a>
+		<ul class="dropdown-content">
+				<li >
+					<a href="/bugs/index.html">Bugs</a>
+				</li>
+				<li >
+					<a href="/others/index.html">Others</a>
+				</li>
+				<li class="active">
+					<a href="/pelican/index.html">Pelican</a>
+				</li>
+				<li >
+					<a href="/python/index.html">Python</a>
+				</li>
+				<li >
+					<a href="/tcpip/index.html">Tcpip</a>
+				</li>
+				<li >
+					<a href="/unixcoding/index.html">Unixcoding</a>
+				</li>
+		</ul>
+	</li>
+      <li><a href="/pages/aboutme.html">关于博主</a></li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">pelican 介绍——基础篇</h1>
+    <p class="meta">
+<time datetime="2015-08-05T00:00:00+08:00" pubdate>三 05 八月 2015</time>    </p>
+</header>
+
+  <div class="entry-content"><p>pelican是基于python的一个静态博客生成器，可以通过markdown编写md文件，然后用pelican生成html，最后部署在github pages上，作为个人博客。</p>
+<h1>pelican安装</h1>
+<p>关于pelican的安装网上已经有很多材料了（也可以查看官方文档<a href="http://docs.getpelican.com/en/3.6.0/quickstart.html#installation">pelican官方文档</a>)。
+　　<code>pip install pelican markdown</code>
+ 　　pelican和markdown是通过pip工具安装的，这里可能还需要安装pip极其依赖库什么的。我安装的时候比较顺利的，没遇到什么比较大的问题。如果中间有一些没办法安装，看看是不是缺少什么库，一起安装下就好了。这里就不再详细介绍pelican 和 markdown的安装了。</p>
+<h1>创建生成器项目</h1>
+<p>前面我们已经安装好了pelican，这里我们要开始使用它了。
+　　首先，我们创建一个Blog工作目录，然后快速生成Blog。</p>
+<div class="highlight"><pre><span></span>mkdir myBlog
+cd myBlog
+pelican-quickstart
+</pre></div>
+
+
+<p>在<code>pelican-quickstart</code>的时候，可能会有一些需要输入的信息，到时根据提示输入就可以了。
+　　前面的步骤完成后，我们会看到在myBlog目录下有很多文件和子目录。大概是这样的：</p>
+<div class="highlight"><pre><span></span>myblog/
+├── content              # 存放输入的源文件
+│   └── (pages)          # 存放手工创建的静态页面(这个还没有）
+├── output               # 生成的输出文件
+├── develop_server.sh    # 方便开启测试服务器
+├── Makefile             # 方便管理博客的Makefile
+├── pelicanconf.py       # 主配置文件
+└── publishconf.py       # 发布时使用的配置文件
+</pre></div>
+
+
+<h2>第一遍文章</h2>
+<p>在content下用markdown语法编写一篇文章：</p>
+<div class="highlight"><pre><span></span><span class="n">Title</span><span class="o">:</span> <span class="n">pelican</span><span class="o">+</span><span class="n">github</span> <span class="n">pages搭建个人静态博客</span>
+<span class="n">Date</span><span class="o">:</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">05</span>
+<span class="n">Category</span><span class="o">:</span> <span class="n">Python</span>
+<span class="n">Tags</span><span class="o">:</span> <span class="n">pelican</span><span class="o">,</span> <span class="n">github</span>
+<span class="n">Slug</span><span class="o">:</span> <span class="n">my</span><span class="o">-</span><span class="kd">super</span><span class="o">-</span><span class="n">post</span>
+<span class="n">Author</span><span class="o">:</span> <span class="n">Windeal</span><span class="o">.</span><span class="na">Li</span>
+<span class="n">Summary</span><span class="o">:</span> <span class="n">Short</span> <span class="n">version</span> <span class="k">for</span> <span class="n">index</span> <span class="n">and</span> <span class="n">feeds</span>
+
+<span class="n">Hello</span> <span class="n">world</span><span class="o">.</span>
+</pre></div>
+
+
+<p>这样我们的博客的第一张site就差不多完成了。我们可以在本机localhost进行测试：
+　　先打开http服务器：
+<code>./develop_server.sh start</code>
+　　然后打开浏览器，输入localhost:8080,可以得到如下图所示：</p>
+<p><img alt="Paste_Image.png" src="/static/images/pelican/pelican_basic01.png"></p>
+<h1>部署到github上</h1>
+<p>关于部署到github pages上，可以参考官方文档 <a href="https://help.github.com/articles/creating-project-pages-manually/">Creating Project Pages manually</a> 不过我在自己做的时候有遇到一些问题，所以这里还是依照我最后成功的做法来描述。另外，在github搭建个人博客有两类，一类是直接大家搭建个人主页，每个github帐号只能创建一个，最后github pages的地址是username.github.io（这一类比较简单，网上的大部分教程也是针对这种情况的，本文不详细介绍。） 这里，我们主要介绍另一类情况，用一个repository搭建静态博客，最后得到的github pages地址是username.github.io/projectname ,例如我的是：<a href="http://windeal.github.io/myBlog/">http://windeal.github.io/myBlog/</a>.
+　　首先，登录github网站，在github上创建一个空仓库，如myBlog（这个就不用介绍了吧）。
+　　接着就是要把我们的博客搬到github仓库上去了。</p>
+<div class="highlight"><pre><span></span>cd output
+git init
+git add .
+git commit -m &quot;First commit&quot;
+</pre></div>
+
+
+<p>前面这些代码是git的一些简单操作，不明白的可以看下git的用法。
+　　我发现，在github上基于repository搭建静态博客时，需要建立在一个新的分支gh-pages，而不能使用master分支，具体原因现在我还没搞清楚。</p>
+<div class="highlight"><pre><span></span>git branch gh-pages            #创建本地分支
+git push origin gh-pages       #将本地分支push到github上
+git push -u origin gh-pages    #把我们前面生成的博客（output下面的文件）push到github上
+</pre></div>
+
+
+<p>到这里基本的部署就差不多完成了，我们看一下效果。</p>
+<p><img alt="初步效果图" src="/static/images/pelican/pelican_basic02.png"></p>
+<p>发现跟本地效果不太一样。
+好像主题没有正常工作。
+这是因为本地的主题路径的前缀在push之后发生了变化。（比如我们一些图片在本地可能在image目录下，push之后可能就在 windeal.github.io/myBlog/image目录下，所以需要添加地址前缀。
+在pelicanconf.py中修改siteurl变量：
+<code>SITEURL = 'http://windeal.github.io/myBlog/'</code></p>
+<p><img alt="带主题的效果图" src="/static/images/pelican/pelican_basic03.png"></p>
+<h1>插入本地图片</h1>
+<div class="highlight"><pre><span></span>pelican支持插入本地图片。
+</pre></div>
+
+
+<ol>
+<li>创建一个保存静态媒体的目录static， （该目录中可以存放我们的图片）</li>
+<li>在pelicanconf.py中添加一行<code>STATIC_PATHS = [u"static"]</code>， 指定静态目录。</li>
+<li>根据markdown语法在文件中引用该图片。如我们在static中有一图片为test.png，则引用方式为：<code>![imge_name](/imgs/test.png)</code></li>
+</ol>
+<h1>添加评论插件</h1>
+<h2>Disqus评论插件</h2>
+<ol>
+<li>在 Disqus 上注册一个用户并生成一个站点testname.disqus.com； (账号注册完以后在右上角有一个齿轮的标记 setting，在下拉列表中选择 add disqus to site)</li>
+<li>设置testname.disqus.com站点使其允许域名testname.github.io；</li>
+<li>设置以上配置文件为DISQUS_SITENAME = u"testname"，mcsrainbow 为站点ID</li>
+</ol></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        Windeal.Li
+    </span>
+  </span>
+<time datetime="2015-08-05T00:00:00+08:00" pubdate>三 05 八月 2015</time>  <span class="categories">
+    <a class='category' href='/pelican/index.html'>pelican</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/pelican.html">pelican</a>,    <a class="category" href="/tag/github.html">github</a>  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/bugs/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html">unregister_netdevice: waiting for eth1 to become free？错误</a>
+      </li>
+      <li class="post">
+          <a href="/unixcoding/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html">ioctl 获取网络接口信息</a>
+      </li>
+      <li class="post">
+          <a href="/tcpip/wu-xian-maczheng-xiang-jie.html">无线MAC帧详解</a>
+      </li>
+      <li class="post">
+          <a href="/others/ge-ren-jian-jie.html">个人简介</a>
+      </li>
+      <li class="post">
+          <a href="/pelican/pelican-jie-shao-ji-chu-pian.html">pelican 介绍——基础篇</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="/bugs/index.html">bugs</a></li>
+        <li><a href="/others/index.html">others</a></li>
+        <li><a href="/pelican/index.html">pelican</a></li>
+        <li><a href="/python/index.html">Python</a></li>
+        <li><a href="/tcpip/index.html">tcpip</a></li>
+        <li><a href="/unixcoding/index.html">unixcoding</a></li>
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+    <a href="/tag/github.html">github</a>,    <a href="/tag/wireless.html">wireless</a>,    <a href="/tag/pelican.html">pelican</a>,    <a href="/tag/linux.html">Linux</a>,    <a href="/tag/ioctl.html">ioctl</a>,    <a href="/tag/mac.html">MAC</a>,    <a href="/tag/wang-luo-nei-he.html">网络，内核</a>,    <a href="/tag/publishing.html">publishing</a>,    <a href="/tag/unix.html">Unix</a>  </section>
+
+
+    <section>
+        <h1>Social</h1>
+        <ul>
+            <li><a href="#" target="_blank">You can add links in your config file</a></li>
+            <li><a href="#" target="_blank">Another social link</a></li>
+        </ul>
+    </section>
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://python.org/" target="_blank">Python.org</a></li>
+            <li><a href="http://jinja.pocoo.org/" target="_blank">Jinja2</a></li>
+            <li><a href="#" target="_blank">You can modify those links in your config file</a></li>
+        </ul>
+    </section>
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2010&ndash;2015  Windeal &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+</body>
+</html>
