@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ioctl 获取网络接口信息 &mdash; Windeal's Home</title>
+  <meta name="author" content="Windeal">
+
+
+
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.png" rel="icon">
+
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Windeal's Home</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
+
+
+<ul class="main-navigation">
+    <li><a href="/">我的博客</a></li>
+      <li><a href="/pages/aboutme.html">关于博主</a></li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">ioctl 获取网络接口信息</h1>
+    <p class="meta">
+<time datetime="2015-11-25T00:00:00+08:00" pubdate>Wed 25 November 2015</time>    </p>
+</header>
+
+  <div class="entry-content"><p>网络程序（尤其是服务器程序）经常在程序启动后使用ioctl后去所在主机的全部网络接口想你系。包括：接口地址、是否支持广播、是否支持多播等。本文主要介绍ioctl的一些基本知识，以及如何使用ioctl获取网络接口信息。
+　　ioctl是用来操纵特殊文件的底层设备参数。我们看下ioctl的用法:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sys/ioctl.h&gt;</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">ioctl</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">request</span><span class="p">,</span> <span class="p">...</span><span class="cm">/* void *arg */</span><span class="p">);</span>
+</pre></div>
+
+
+<ul>
+<li><strong>fd：</strong>一个打开的文件描述符。</li>
+<li><strong>request：</strong>与设备相关的请求码</li>
+<li><strong>arg: </strong> 总是一个指针，指针类型依赖于request参数。该参数其实是ioctl调用需要的数据，或这返回的数据。</li>
+<li><strong>返回值:</strong> 一般情况下，返回0标识调用成功，返回-1表失败（并设置errno）。 也有一些操作在成功时返回非负数（该非负数可能携带程序需要的特殊信息）</li>
+</ul>
+<p>ioctl的request可以分为<strong>套接字，文件，网络接口，ARP，路由，流</strong>六大类，本文主要介绍<strong>网络接口</strong>相关的ioctl操作。
+　　我们先来看下ioctl调用中与网络接口相关的request：</p>
+<table>
+<thead>
+<tr>
+<th>requets</th>
+<th>说明</th>
+<th>数据类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SIOCGIFCONF</td>
+<td>获取所有网络接口列表</td>
+<td>struct ifconf</td>
+</tr>
+<tr>
+<td>SIOCSIFADDR</td>
+<td>设置网络接口地址</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCGIFADDR</td>
+<td>获取网络接口地址</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCSIFFLAG</td>
+<td>设置接口标志</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCGIFFLAG</td>
+<td>获取接口标志</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCSIFDSTADDR</td>
+<td>设置点对点地址</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCGIFDSTADDR</td>
+<td>获取点对点地址</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCSIFBRDADDR</td>
+<td>设置广播地址</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCGIFBRDADDR</td>
+<td>获取广播地址</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCSIFNETMASK</td>
+<td>设置子网掩码</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCGIFNETMASK</td>
+<td>获取子网掩码</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCSIFMETRIC</td>
+<td>设置接口的测度</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCGIFMETRIC</td>
+<td>获取接口的测度</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCGIFMTU</td>
+<td>获取接口 MTU</td>
+<td>struct ifreq</td>
+</tr>
+<tr>
+<td>SIOCxxx</td>
+<td>其他request，与实现有关</td>
+<td>struct ifreq</td>
+</tr>
+</tbody>
+</table>
+<p>ioctl操作网络接口无非就是两种情况，要么从内核获取网络接口信息，要么想内核设置网络接口参数。</p>
+<h3>ioctl 获取/设置特定网络接口参数</h3>
+<p>在前面的request表格中，我们看到，SIOCGIFCONF的数据类型与其他request不同，它是用来获取的所有网络接口列表，具体后面会介绍。现在我们来看下除了SIOCGIFCONF外，其他Request的使用，也就是具体某个网络接口参数的获取与设置。
+　　首先，了解下数据类型，即结构体<code>struct ifreq</code></p>
+<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">ifreq</span>
+<span class="p">{</span>
+<span class="cp"># define IFHWADDRLEN    6</span>
+<span class="cp"># define IFNAMSIZ   IF_NAMESIZE</span>
+    <span class="k">union</span>
+    <span class="p">{</span>
+<span class="kt">char</span> <span class="n">ifrn_name</span><span class="p">[</span><span class="n">IFNAMSIZ</span><span class="p">];</span>   <span class="cm">/* Interface name, e.g. &quot;en0&quot;.  */</span>
+
+    <span class="p">}</span> <span class="n">ifr_ifrn</span><span class="p">;</span>
+
+    <span class="k">union</span>
+    <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">sockaddr</span> <span class="n">ifru_addr</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">sockaddr</span> <span class="n">ifru_dstaddr</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">sockaddr</span> <span class="n">ifru_broadaddr</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">sockaddr</span> <span class="n">ifru_netmask</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">sockaddr</span> <span class="n">ifru_hwaddr</span><span class="p">;</span>
+    <span class="kt">short</span> <span class="kt">int</span> <span class="n">ifru_flags</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ifru_ivalue</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ifru_mtu</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">ifmap</span> <span class="n">ifru_map</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">ifru_slave</span><span class="p">[</span><span class="n">IFNAMSIZ</span><span class="p">];</span>  <span class="cm">/* Just fits the size */</span>
+    <span class="kt">char</span> <span class="n">ifru_newname</span><span class="p">[</span><span class="n">IFNAMSIZ</span><span class="p">];</span>
+    <span class="n">__caddr_t</span> <span class="n">ifru_data</span><span class="p">;</span>
+
+    <span class="p">}</span> <span class="n">ifr_ifru</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre></div>
+
+
+<p>不难看出，其实<code>struct ifreq</code>主要包含两个union结构，第一个字段标识网络接口名字，第二个字段则是该网络接口对应具体某个网络参数。简单的说，<strong>一个struct ifreq实例，表示某一网络接口的某个特定网络参数</strong>。现在，我们以网络接口mtu为例，说明我们是如何获得某个网络接口参数的。
+　　当我要获取一个网络接口（假设为eth0）的mtu，我们需要一个<code>struct ifreq</code>结构体对象，它的第一个字段的ifrn_name就是eth0了，而第二个union中生效的是int ifr_mtu这一字段。接下来我们看下实际程序中如何获取网络接口mtu。</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;                                                                                                                                                                                           </span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;net/if.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/ioctl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/socket.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sock</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">ifreq</span> <span class="n">ifReq</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span>  <span class="p">)</span>
+    <span class="p">{</span>  
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;socket failed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+     <span class="p">}</span>  
+
+    <span class="c1">// 获取eth0 当前MTU</span>
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ifReq</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ifReq</span><span class="p">));</span>
+    <span class="n">strncpy</span><span class="p">(</span><span class="n">ifReq</span><span class="p">.</span><span class="n">ifr_ifrn</span><span class="p">.</span><span class="n">ifrn_name</span><span class="p">,</span> <span class="s">&quot;eth0&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">SIOCGIFMTU</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ifReq</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="p">{</span>  
+        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;ioctl SIOCGIFMTU error</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+     <span class="p">}</span>  
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;eth0&#39;s mtu is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ifReq</span><span class="p">.</span><span class="n">ifr_ifru</span><span class="p">.</span><span class="n">ifru_mtu</span><span class="p">);</span>
+
+    <span class="c1">//将eth0的MTU设置为1200</span>
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ifReq</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ifReq</span><span class="p">));</span>
+    <span class="n">strncpy</span><span class="p">(</span><span class="n">ifReq</span><span class="p">.</span><span class="n">ifr_ifrn</span><span class="p">.</span><span class="n">ifrn_name</span><span class="p">,</span> <span class="s">&quot;eth0&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="n">ifReq</span><span class="p">.</span><span class="n">ifr_ifru</span><span class="p">.</span><span class="n">ifru_mtu</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">SIOCSIFMTU</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ifReq</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="p">{</span>  
+        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;ioctl  SIOCSIFMTU error</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+     <span class="p">}</span>  
+
+    <span class="c1">// 获取eth0 修改 后MTU</span>
+    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ifReq</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ifReq</span><span class="p">));</span>
+    <span class="n">strncpy</span><span class="p">(</span><span class="n">ifReq</span><span class="p">.</span><span class="n">ifr_ifrn</span><span class="p">.</span><span class="n">ifrn_name</span><span class="p">,</span> <span class="s">&quot;eth0&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">SIOCGIFMTU</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ifReq</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;ioctl SIOCGIFMTU error</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;eth0&#39;s mtu is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ifReq</span><span class="p">.</span><span class="n">ifr_ifru</span><span class="p">.</span><span class="n">ifru_mtu</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="p">}</span>    
+</pre></div>
+
+
+<p>运行结果：</p>
+<div class="highlight"><pre><span></span>windeal@ubuntu:Windeal$ sudo ./a.out
+eth0<span class="s1">&#39;s mtu is 1500</span>
+<span class="s1">eth0&#39;</span>s mtu is <span class="m">1200</span>
+</pre></div>
+
+
+<h3>ioctl获取所有网络接口列表</h3>
+<p>前面我们已经说过，在与网络接口相关的request中，SIOCIFCONF与众不同，它可以获取所有网络接口的列表，SIOCGIFCONF最终返回的其实是一个struct ifreq类型的数组。数组的每一项代表这一个网络接口以及它对应的ip地址。
+　　我们先看下<code>struct ifconf</code></p>
+<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">ifconf</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">ifc_len</span><span class="p">;</span>            <span class="cm">/* Size of buffer.  */</span>
+    <span class="k">union</span>
+      <span class="p">{</span>  
+        <span class="kt">char</span><span class="o">*</span> <span class="n">ifcu_buf</span><span class="p">;</span>
+        <span class="k">struct</span> <span class="n">ifreq</span> <span class="o">*</span><span class="n">ifcu_req</span><span class="p">;</span>
+       <span class="p">}</span> <span class="n">ifc_ifcu</span><span class="p">;</span>
+
+<span class="p">};</span>
+<span class="cp"># define ifc_buf    ifc_ifcu.ifcu_buf   </span><span class="cm">/* Buffer address.  */</span><span class="cp"></span>
+<span class="cp"># define ifc_req    ifc_ifcu.ifcu_req   </span><span class="cm">/* Array of structures.  */</span><span class="cp"></span>
+</pre></div>
+
+
+<p>结构体struct ifconf包含两个字段，第一个字段ifc_len表示第二个字段指向的数据buf的size。第二个字段是一个联合体。
++ <strong>ifc_len：</strong>    数据区的大小
++ <strong>ifcu_buf：</strong>   用户用户设置接口参数时，保存要传给内核的接口参数。
++ <strong>ifcu_req：</strong>    用于用户向内核请求数据，从内核返回的接口信息。
+　　<strong>ifcu_req指向一个struct ifreq数组，数组的每一项存储着一个接口的名字和接口的ip。 因此，<code>ifc_len/sizeof(struct ifreq)</code>就是本机的网络接口的数目。</strong>
+　</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;                                                                                                                                                                                        </span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;net/if.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/ioctl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/socket.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;netinet/in.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;arpa/inet.h&gt;</span><span class="cp"></span>
+<span class="cp">#define MAX_IF_NUM 10  </span><span class="c1">//假设本机最多10个网络接口</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span> 
+    <span class="kt">int</span> <span class="n">sock</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ipDotBuf</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>  <span class="c1">//保存点分十进制地址</span>
+    <span class="k">struct</span> <span class="n">ifreq</span> <span class="n">ifVec</span><span class="p">[</span><span class="n">MAX_IF_NUM</span><span class="p">];</span>
+    <span class="k">struct</span> <span class="n">ifconf</span> <span class="n">ifConf</span><span class="p">;</span>
+    <span class="n">ifConf</span><span class="p">.</span><span class="n">ifc_len</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">ifVec</span><span class="p">);</span>
+    <span class="n">ifConf</span><span class="p">.</span><span class="n">ifc_buf</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">ifVec</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Len: %d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ifConf</span><span class="p">.</span><span class="n">ifc_len</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span>  <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;socket failed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="p">}</span>  
+    <span class="c1">//获取所有网络接口列表</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">SIOCGIFCONF</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ifConf</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="p">{</span>
+            <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;ioctl SIOCGIFCONF failed!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Len: %d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ifConf</span><span class="p">.</span><span class="n">ifc_len</span><span class="p">);</span> 
+
+    <span class="k">struct</span> <span class="n">ifreq</span> <span class="o">*</span><span class="n">ifPt</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">ifreq</span> <span class="o">*</span><span class="n">ifEndPt</span><span class="p">;</span> 
+    <span class="n">ifPt</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">ifreq</span><span class="o">*</span><span class="p">)</span><span class="n">ifVec</span><span class="p">;</span> 
+    <span class="n">ifEndPt</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">ifVec</span> <span class="o">+</span> <span class="n">ifConf</span><span class="p">.</span><span class="n">ifc_len</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">ifPt</span> <span class="o">=</span> <span class="n">ifVec</span><span class="p">;</span> <span class="n">ifPt</span> <span class="o">&lt;</span> <span class="n">ifEndPt</span><span class="p">;</span> <span class="n">ifPt</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>  
+        <span class="k">struct</span> <span class="n">ifreq</span> <span class="n">ifReq</span><span class="p">;</span> 
+        <span class="k">if</span> <span class="p">(</span> <span class="n">ifPt</span><span class="o">-&gt;</span><span class="n">ifr_addr</span><span class="p">.</span><span class="n">sa_family</span> <span class="o">!=</span> <span class="n">AF_INET</span>  <span class="p">)</span>  
+                <span class="k">continue</span><span class="p">;</span>
+
+        <span class="cm">/*  打印ip地址  */</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">inet_ntoa</span><span class="p">(((</span><span class="k">struct</span> <span class="n">sockaddr_in</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">ifPt</span><span class="o">-&gt;</span><span class="n">ifr_addr</span><span class="p">))</span><span class="o">-&gt;</span><span class="n">sin_addr</span><span class="p">));</span>
+     <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>  
+</pre></div>
+
+
+<p>结果如下</p>
+<div class="highlight"><pre><span></span>windeal@ubuntu:Windeal$ ./a.out
+Len: 320
+Len: 64
+127.0.0.1
+192.168.1.106
+</pre></div></div>
+    <footer>
+<!--上一篇 下一篇-->
+ <ul>
+     <li>
+         <a href="/wu-xian-maczheng-xiang-jie.html">上一篇：无线MAC帧详解</a>
+     </li>
+     <li>
+         <a href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html"> 下一篇：unregister_netdevice: waiting for eth1 to become free？错误</a>
+     </li>
+</ul> <!--上一篇 下一篇-->
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        Windeal.Li
+    </span>
+  </span>
+<time datetime="2015-11-25T00:00:00+08:00" pubdate>Wed 25 November 2015</time>  <span class="categories">
+    <a class='category' href='/category/unixcoding.html'>unixcoding</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/ioctl.html">ioctl</a>,    <a class="category" href="/tag/unix.html">Unix</a>,    <a class="category" href="/tag/linux.html">Linux</a>  </span>
+</p><div class="sharing">
+</div>	</footer>
+  </article>
+
+
+</div>
+<aside class="sidebar">
+
+    <section>
+        <h1>Social</h1>
+        <ul>
+            <li><a href="mailto:2378264731@qq.com" target="_blank">给博主发Email</a></li>
+        </ul>
+    </section>
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html">unregister_netdevice: waiting for eth1 to become free？错误</a>
+      </li>
+      <li class="post">
+          <a href="/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html">ioctl 获取网络接口信息</a>
+      </li>
+      <li class="post">
+          <a href="/wu-xian-maczheng-xiang-jie.html">无线MAC帧详解</a>
+      </li>
+      <li class="post">
+          <a href="/ge-ren-jian-jie.html">个人简介</a>
+      </li>
+      <li class="post">
+          <a href="/pelican-jie-shao-ji-chu-pian.html">pelican 介绍——基础篇</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+<li><a href="/category/bugs.html">Bug收录</a> (1)<br> </li>  
+<li><a href="/category/others.html">其他</a> (1)<br> </li>  
+<li><a href="/category/pelican.html">pelican</a> (2)<br> </li>  
+<li><a href="/category/python.html">Python</a> (2)<br> </li>  
+<li><a href="/category/tcpip.html">TCP/IP详解</a> (1)<br> </li>  
+<li><a href="/category/unixcoding.html">Unix环境编程</a> (1)<br> </li>  
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+<style>
+ul.tagcloud {
+  list-style: none;
+    padding: 0;
+}
+
+ul.tagcloud li {
+    display: inline-block;
+}
+
+li.tag-1 {
+    font-size: 150%;
+}
+
+li.tag-2 {
+    font-size: 120%;
+}
+
+...
+
+ul.tagcloud .list-group-item <span>.badge {
+    background-color: grey;
+    color: white;
+}
+</style>
+
+<ul class="tagcloud">
+		<li class="tag-4">
+			<a href="/tag/unix.html">Unix</a>
+		</li>
+		<li class="tag-2">
+			<a href="/tag/linux.html">Linux</a>
+		</li>
+		<li class="tag-1">
+			<a href="/tag/github.html">github</a>
+		</li>
+		<li class="tag-4">
+			<a href="/tag/ioctl.html">ioctl</a>
+		</li>
+		<li class="tag-4">
+			<a href="/tag/wang-luo-nei-he.html">网络，内核</a>
+		</li>
+		<li class="tag-4">
+			<a href="/tag/mac.html">MAC</a>
+		</li>
+		<li class="tag-1">
+			<a href="/tag/pelican.html">pelican</a>
+		</li>
+		<li class="tag-2">
+			<a href="/tag/publishing.html">publishing</a>
+		</li>
+		<li class="tag-4">
+			<a href="/tag/wireless.html">wireless</a>
+		</li>
+</ul>
+  </section>
+
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li><a href="http://python.org/" target="_blank">Python.org</a></li>
+            <li><a href="http://jinja.pocoo.org/" target="_blank">Jinja2</a></li>
+        </ul>
+    </section>
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2010&ndash;2015  Windeal &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+<!--自动推送网站链接 给百度-->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script><!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?cec6991a70bb6ec4201ff2468576844a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
