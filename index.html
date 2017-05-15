@@ -45,6 +45,36 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="/gccsheng-ji-dao-jian-dan-fang-fa.html">gcc升级到简单方法</a>
+      </h1>
+    <p class="meta">
+<time datetime="2017-05-15T00:00:00+08:00" pubdate>Mon 15 May 2017</time>    </p>
+</header>
+
+  <div class="entry-content"><p>gcc 升级</p>
+<p>升级gcc目前知道两种方法</p>
+<p>直接编译安装新版本的gcc （目测前方坑很多）
+安装devtoolset来升级gcc， （网上说这种方式很简单）
+下面通过devtoolset来升级下gcc 
+devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 
+gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
+下面是升级步骤</p>
+<div class="highlight"><pre><span></span>yum install centos-release-scl-rh centos-release-scl
+yum check-update
+yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
+</pre></div>
+
+
+<p>升级之后需要启动devtoolset：</p>
+<p><code>source /opt/rh/devtoolset-3/enable</code>
+测试发现当前命令似乎只对本次shell有效，所以可能需要把这条命令加入到~/.bashrc中 …</p></div>
+  <footer>
+    <a rel="full-article" href="/gccsheng-ji-dao-jian-dan-fang-fa.html">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html">unregister_netdevice: waiting for eth1 to become free？错误</a>
       </h1>
     <p class="meta">
@@ -85,71 +115,6 @@
     <a rel="full-article" href="/wu-xian-maczheng-xiang-jie.html">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="/ge-ren-jian-jie.html">个人简介</a>
-      </h1>
-    <p class="meta">
-<time datetime="2015-08-05T00:00:00+08:00" pubdate>Wed 05 August 2015</time>    </p>
-</header>
-
-  <div class="entry-content"><p><strong>博主到底是有多帅！！！</strong></p></div>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="/pelican-jie-shao-ji-chu-pian.html">pelican 介绍——基础篇</a>
-      </h1>
-    <p class="meta">
-<time datetime="2015-08-05T00:00:00+08:00" pubdate>Wed 05 August 2015</time>    </p>
-</header>
-
-  <div class="entry-content"><p>pelican是基于python的一个静态博客生成器，可以通过markdown编写md文件，然后用pelican生成html，最后部署在github pages上，作为个人博客. pelican安装　关于pelican的安装网上已经有很多材料了（也可以查看官方文档<a href="http://docs.getpelican.com/en/3.6.0/quickstart.html#installation">pelican官方文档</a>)。pip install pelican markdown` pelican和markdown是通过pip工具安装的，这里可能还需要安装pip极其依赖库什么的。我安装的时候比较顺利的，没遇到什么比较大的问题。</p></div>
-  <footer>
-    <a rel="full-article" href="/pelican-jie-shao-ji-chu-pian.html">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="/pelican-jie-shao-jin-jie-pian.html">pelican 介绍——进阶篇</a>
-      </h1>
-    <p class="meta">
-<time datetime="2015-08-05T00:00:00+08:00" pubdate>Wed 05 August 2015</time>    </p>
-</header>
-
-  <div class="entry-content"><p><strong>逗逼不？</strong>
-<strong>你说你逗逼不？</strong></p></div>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="/my-super-post.html">My super title</a>
-      </h1>
-    <p class="meta">
-<time datetime="2010-12-03T10:20:00+08:00" pubdate>Fri 03 December 2010</time>    </p>
-</header>
-
-  <div class="entry-content"><p>Short version for index and feeds</p></div>
-  <footer>
-    <a rel="full-article" href="/my-super-post.html">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="/my-super-post1.html">My super title good</a>
-      </h1>
-    <p class="meta">
-<time datetime="2010-12-03T10:20:00+08:00" pubdate>Fri 03 December 2010</time>    </p>
-</header>
-
-  <div class="entry-content"><p>Short version for index and feeds</p></div>
-  <footer>
-    <a rel="full-article" href="/my-super-post1.html">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
 
   <br />
@@ -166,6 +131,9 @@
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
+          <a href="/gccsheng-ji-dao-jian-dan-fang-fa.html">gcc升级到简单方法</a>
+      </li>
+      <li class="post">
           <a href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html">unregister_netdevice: waiting for eth1 to become free？错误</a>
       </li>
       <li class="post">
@@ -174,12 +142,6 @@
       <li class="post">
           <a href="/wu-xian-maczheng-xiang-jie.html">无线MAC帧详解</a>
       </li>
-      <li class="post">
-          <a href="/ge-ren-jian-jie.html">个人简介</a>
-      </li>
-      <li class="post">
-          <a href="/pelican-jie-shao-ji-chu-pian.html">pelican 介绍——基础篇</a>
-      </li>
     </ul>
   </section>
   <section>
@@ -187,10 +149,8 @@
     <h1>Categories</h1>
     <ul id="recent_posts">
 <li><a href="/category/bugs.html">Bug收录</a> (1)<br> </li>  
-<li><a href="/category/others.html">其他</a> (1)<br> </li>  
-<li><a href="/category/pelican.html">pelican</a> (2)<br> </li>  
-<li><a href="/category/python.html">Python</a> (2)<br> </li>  
 <li><a href="/category/tcpip.html">TCP/IP详解</a> (1)<br> </li>  
+<li><a href="/category/tools.html">环境与工具</a> (1)<br> </li>  
 <li><a href="/category/unixcoding.html">Unix环境编程</a> (1)<br> </li>  
     </ul>
   </section>
@@ -226,31 +186,25 @@ ul.tagcloud .list-group-item <span>.badge {
 
 <ul class="tagcloud">
 		<li class="tag-4">
-			<a href="/tag/unix.html">Unix</a>
-		</li>
-		<li class="tag-2">
-			<a href="/tag/linux.html">Linux</a>
-		</li>
-		<li class="tag-1">
-			<a href="/tag/github.html">github</a>
+			<a href="/tag/mac.html">MAC</a>
 		</li>
 		<li class="tag-4">
-			<a href="/tag/ioctl.html">ioctl</a>
+			<a href="/tag/gcc.html">gcc</a>
 		</li>
 		<li class="tag-4">
 			<a href="/tag/wang-luo-nei-he.html">网络，内核</a>
 		</li>
 		<li class="tag-4">
-			<a href="/tag/mac.html">MAC</a>
-		</li>
-		<li class="tag-1">
-			<a href="/tag/pelican.html">pelican</a>
-		</li>
-		<li class="tag-2">
-			<a href="/tag/publishing.html">publishing</a>
+			<a href="/tag/wireless.html">wireless</a>
 		</li>
 		<li class="tag-4">
-			<a href="/tag/wireless.html">wireless</a>
+			<a href="/tag/unix.html">Unix</a>
+		</li>
+		<li class="tag-1">
+			<a href="/tag/linux.html">Linux</a>
+		</li>
+		<li class="tag-4">
+			<a href="/tag/ioctl.html">ioctl</a>
 		</li>
 </ul>
   </section>
@@ -267,7 +221,7 @@ ul.tagcloud .list-group-item <span>.badge {
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2010&ndash;2015  Windeal &mdash;
+    Copyright &copy;  2015&ndash;2017  Windeal &mdash;
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
   <script src="/theme/js/modernizr-2.0.js"></script>
