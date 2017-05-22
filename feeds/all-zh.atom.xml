@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Windeal's Home</title><link href="/" rel="alternate"></link><link href="/feeds/all-zh.atom.xml" rel="self"></link><id>/</id><updated>2017-05-15T00:00:00+08:00</updated><entry><title>gcc升级到简单方法</title><link href="/gccsheng-ji-dao-jian-dan-fang-fa.html" rel="alternate"></link><published>2017-05-15T00:00:00+08:00</published><updated>2017-05-15T00:00:00+08:00</updated><author><name>Windeal.Li</name></author><id>tag:None,2017-05-15:/gccsheng-ji-dao-jian-dan-fang-fa.html</id><summary type="html">&lt;p&gt;gcc 升级&lt;/p&gt;
+&lt;p&gt;升级gcc目前知道两种方法&lt;/p&gt;
+&lt;p&gt;直接编译安装新版本的gcc （目测前方坑很多）
+安装devtoolset来升级gcc， （网上说这种方式很简单）
+下面通过devtoolset来升级下gcc 
+devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 
+gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
+下面是升级步骤&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;yum install centos-release-scl-rh centos-release-scl
+yum check-update
+yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;升级之后需要启动devtoolset：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;source /opt/rh/devtoolset-3/enable&lt;/code&gt;
+测试发现当前命令似乎只对本次shell有效，所以可能需要把这条命令加入到~/.bashrc中 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;gcc 升级&lt;/p&gt;
+&lt;p&gt;升级gcc目前知道两种方法&lt;/p&gt;
+&lt;p&gt;直接编译安装新版本的gcc （目测前方坑很多）
+安装devtoolset来升级gcc， （网上说这种方式很简单）
+下面通过devtoolset来升级下gcc 
+devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 
+gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
+下面是升级步骤&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;yum install centos-release-scl-rh centos-release-scl
+yum check-update
+yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;升级之后需要启动devtoolset：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;source /opt/rh/devtoolset-3/enable&lt;/code&gt;
+测试发现当前命令似乎只对本次shell有效，所以可能需要把这条命令加入到~/.bashrc中。&lt;/p&gt;
+&lt;p&gt;接下来可以通过gcc -v 查看是否更新完毕。&lt;/p&gt;</content><category term="gcc"></category></entry><entry><title>unregister_netdevice: waiting for eth1 to become free？错误</title><link href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html" rel="alternate"></link><published>2015-11-29T00:00:00+08:00</published><updated>2015-11-29T00:00:00+08:00</updated><author><name>Windeal.Li</name></author><id>tag:None,2015-11-29:/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html</id><summary type="html">&lt;p&gt;然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误： unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了
+前段日子在做vlan的时候遇见一个麻烦，问题大致是这样的：&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Description：&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;路由器仅有一张网卡，phy0，通过vlan划分WAN端和LAN端
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    vconfig add phy0 1  #lan phy0.1
+    vconfig add phy0 2 #wan phy0.2，（我通过ip link改了名字，使得phy0.2 更名为eth1）
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误：
+unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;碰上问题时，进行了些分析，其间走了不少弯路，这里也顺便提下走的弯路了。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Analyse 1：&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;应该是由程序占用了eth1，那么，先找出占用它的程序。
+首先看了下所有正在运行的进程，kill掉比较可能的进程，rmmod掉可能占用eth1的模块（包括一个名为enet的模块，这里先提一下，因为最后分析出来其实是enet模块导致了这个错误）。结果执行vconfig rem eth1 命令还是会出现错误，并宕机。
+接着通过循环，kill掉所有能kill掉的进程，问题依然没有解决。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Analyse 2：&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;查资料，发现错误现象应该是：eth1设备的引用计数不为0，导致eth1的除名函数在netdev_run_todo中陷入死循环（循环判断eth1的引用计数是否为0），然后导致程序宕机。
+乍一看，跟Analyse1 的分析结果差不多，其实不然。
+ 其主要区别在于：
+    在Analyse 1中，我们认为，eth1是否程序占用了，那么我们把程序down/kill掉，就可以解除占用。而在Analyse 2中，eth1引用计数不为0，不一定是eth1被占用了，也可能因为占用它的程序/模块在自身down掉的时候，没有吧引用计数减一造成的。
+在网上查了好久，出现unregister_netdevice: waiting for eth1 to become free？的原因可能是某一处代码中使用了dev_hold而没有使用dev_put。
+dev_hold和dev_put是配对使用的，一个用来引用计数加一，一个用于引用计数减一。
+查看模块代码，没有发现单独直接使用dev_hold的情况。那会不会是简介调用呢，仔细查找了好久，果然是间接调用。
+在我们一些模块代码中，经常会通过dev_get_by_name来获取设备信息。而dev_get_by_name封装了dev_hold，导致引用计数加一。由于dev_get_by_name是内核提供的接口，不熟悉的coder很可能不晓得这点，也没有注意到需要调用dev_put.，于是便有了上面所说的错误。
+&lt;/pre&gt;&lt;/div&gt;</content><category term="Linux"></category><category term="网络，内核"></category></entry><entry><title>ioctl 获取网络接口信息</title><link href="/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html" rel="alternate"></link><published>2015-11-25T00:00:00+08:00</published><updated>2015-11-25T00:00:00+08:00</updated><author><name>Windeal.Li</name></author><id>tag:None,2015-11-25:/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html</id><summary type="html">&lt;p&gt;网络程序（尤其是服务器程序）经常在程序启动后使用ioctl后去所在主机的全部网络接口想你系。包括：接口地址、是否支持广播、是否支持多播等。本文主要介绍ioctl的一些基本知识，以及如何使用ioctl获取网络接口信&amp;gt; ioctl是用来操纵特殊文件的底层设备参数。我们看下ioctl的用法:&lt;/p&gt;</summary><content type="html">&lt;p&gt;网络程序（尤其是服务器程序）经常在程序启动后使用ioctl后去所在主机的全部网络接口想你系。包括：接口地址、是否支持广播、是否支持多播等。本文主要介绍ioctl的一些基本知识，以及如何使用ioctl获取网络接口信息。
+　　ioctl是用来操纵特殊文件的底层设备参数。我们看下ioctl的用法:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/ioctl.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;ioctl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;fd&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;&lt;span class="cm"&gt;/* void *arg */&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;fd：&lt;/strong&gt;一个打开的文件描述符。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;request：&lt;/strong&gt;与设备相关的请求码&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;arg: &lt;/strong&gt; 总是一个指针，指针类型依赖于request参数。该参数其实是ioctl调用需要的数据，或这返回的数据。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;返回值:&lt;/strong&gt; 一般情况下，返回0标识调用成功，返回-1表失败（并设置errno）。 也有一些操作在成功时返回非负数（该非负数可能携带程序需要的特殊信息）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ioctl的request可以分为&lt;strong&gt;套接字，文件，网络接口，ARP，路由，流&lt;/strong&gt;六大类，本文主要介绍&lt;strong&gt;网络接口&lt;/strong&gt;相关的ioctl操作。
+　　我们先来看下ioctl调用中与网络接口相关的request：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;requets&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;数据类型&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFCONF&lt;/td&gt;
+&lt;td&gt;获取所有网络接口列表&lt;/td&gt;
+&lt;td&gt;struct ifconf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCSIFADDR&lt;/td&gt;
+&lt;td&gt;设置网络接口地址&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFADDR&lt;/td&gt;
+&lt;td&gt;获取网络接口地址&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCSIFFLAG&lt;/td&gt;
+&lt;td&gt;设置接口标志&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFFLAG&lt;/td&gt;
+&lt;td&gt;获取接口标志&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCSIFDSTADDR&lt;/td&gt;
+&lt;td&gt;设置点对点地址&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFDSTADDR&lt;/td&gt;
+&lt;td&gt;获取点对点地址&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCSIFBRDADDR&lt;/td&gt;
+&lt;td&gt;设置广播地址&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFBRDADDR&lt;/td&gt;
+&lt;td&gt;获取广播地址&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCSIFNETMASK&lt;/td&gt;
+&lt;td&gt;设置子网掩码&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFNETMASK&lt;/td&gt;
+&lt;td&gt;获取子网掩码&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCSIFMETRIC&lt;/td&gt;
+&lt;td&gt;设置接口的测度&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFMETRIC&lt;/td&gt;
+&lt;td&gt;获取接口的测度&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCGIFMTU&lt;/td&gt;
+&lt;td&gt;获取接口 MTU&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SIOCxxx&lt;/td&gt;
+&lt;td&gt;其他request，与实现有关&lt;/td&gt;
+&lt;td&gt;struct ifreq&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;ioctl操作网络接口无非就是两种情况，要么从内核获取网络接口信息，要么想内核设置网络接口参数。&lt;/p&gt;
+&lt;h3&gt;ioctl 获取/设置特定网络接口参数&lt;/h3&gt;
+&lt;p&gt;在前面的request表格中，我们看到，SIOCGIFCONF的数据类型与其他request不同，它是用来获取的所有网络接口列表，具体后面会介绍。现在我们来看下除了SIOCGIFCONF外，其他Request的使用，也就是具体某个网络接口参数的获取与设置。
+　　首先，了解下数据类型，即结构体&lt;code&gt;struct ifreq&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="cp"&gt;# define IFHWADDRLEN    6&lt;/span&gt;
+&lt;span class="cp"&gt;# define IFNAMSIZ   IF_NAMESIZE&lt;/span&gt;
+    &lt;span class="k"&gt;union&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;ifrn_name&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IFNAMSIZ&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;   &lt;span class="cm"&gt;/* Interface name, e.g. &amp;quot;en0&amp;quot;.  */&lt;/span&gt;
+
+    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;ifr_ifrn&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;union&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;sockaddr&lt;/span&gt; &lt;span class="n"&gt;ifru_addr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;sockaddr&lt;/span&gt; &lt;span class="n"&gt;ifru_dstaddr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;sockaddr&lt;/span&gt; &lt;span class="n"&gt;ifru_broadaddr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;sockaddr&lt;/span&gt; &lt;span class="n"&gt;ifru_netmask&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;sockaddr&lt;/span&gt; &lt;span class="n"&gt;ifru_hwaddr&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;short&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ifru_flags&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ifru_ivalue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ifru_mtu&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifmap&lt;/span&gt; &lt;span class="n"&gt;ifru_map&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;ifru_slave&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IFNAMSIZ&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;  &lt;span class="cm"&gt;/* Just fits the size */&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;ifru_newname&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IFNAMSIZ&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="n"&gt;__caddr_t&lt;/span&gt; &lt;span class="n"&gt;ifru_data&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;ifr_ifru&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;不难看出，其实&lt;code&gt;struct ifreq&lt;/code&gt;主要包含两个union结构，第一个字段标识网络接口名字，第二个字段则是该网络接口对应具体某个网络参数。简单的说，&lt;strong&gt;一个struct ifreq实例，表示某一网络接口的某个特定网络参数&lt;/strong&gt;。现在，我们以网络接口mtu为例，说明我们是如何获得某个网络接口参数的。
+　　当我要获取一个网络接口（假设为eth0）的mtu，我们需要一个&lt;code&gt;struct ifreq&lt;/code&gt;结构体对象，它的第一个字段的ifrn_name就是eth0了，而第二个union中生效的是int ifr_mtu这一字段。接下来我们看下实际程序中如何获取网络接口mtu。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;                                                                                                                                                                                           &lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;net/if.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/ioctl.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/socket.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt; &lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;AF_INET&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SOCK_DGRAM&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;  &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;  
+        &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;socket failed!&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+     &lt;span class="p"&gt;}&lt;/span&gt;  
+
+    &lt;span class="c1"&gt;// 获取eth0 当前MTU&lt;/span&gt;
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="n"&gt;strncpy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifr_ifrn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifrn_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;eth0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ioctl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SIOCGIFMTU&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;  
+        &lt;span class="n"&gt;perror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ioctl SIOCGIFMTU error&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+     &lt;span class="p"&gt;}&lt;/span&gt;  
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;eth0&amp;#39;s mtu is %d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifr_ifru&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifru_mtu&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="c1"&gt;//将eth0的MTU设置为1200&lt;/span&gt;
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="n"&gt;strncpy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifr_ifrn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifrn_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;eth0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifr_ifru&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifru_mtu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1200&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ioctl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SIOCSIFMTU&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;  
+        &lt;span class="n"&gt;perror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ioctl  SIOCSIFMTU error&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+     &lt;span class="p"&gt;}&lt;/span&gt;  
+
+    &lt;span class="c1"&gt;// 获取eth0 修改 后MTU&lt;/span&gt;
+    &lt;span class="n"&gt;memset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="n"&gt;strncpy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifr_ifrn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifrn_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;eth0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ioctl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SIOCGIFMTU&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;perror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ioctl SIOCGIFMTU error&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;eth0&amp;#39;s mtu is %d&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifr_ifru&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifru_mtu&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="p"&gt;}&lt;/span&gt;    
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;windeal@ubuntu:Windeal$ sudo ./a.out
+eth0&lt;span class="s1"&gt;&amp;#39;s mtu is 1500&lt;/span&gt;
+&lt;span class="s1"&gt;eth0&amp;#39;&lt;/span&gt;s mtu is &lt;span class="m"&gt;1200&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;ioctl获取所有网络接口列表&lt;/h3&gt;
+&lt;p&gt;前面我们已经说过，在与网络接口相关的request中，SIOCIFCONF与众不同，它可以获取所有网络接口的列表，SIOCGIFCONF最终返回的其实是一个struct ifreq类型的数组。数组的每一项代表这一个网络接口以及它对应的ip地址。
+　　我们先看下&lt;code&gt;struct ifconf&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifconf&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ifc_len&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;            &lt;span class="cm"&gt;/* Size of buffer.  */&lt;/span&gt;
+    &lt;span class="k"&gt;union&lt;/span&gt;
+      &lt;span class="p"&gt;{&lt;/span&gt;  
+        &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;ifcu_buf&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;ifcu_req&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+       &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="n"&gt;ifc_ifcu&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;span class="cp"&gt;# define ifc_buf    ifc_ifcu.ifcu_buf   &lt;/span&gt;&lt;span class="cm"&gt;/* Buffer address.  */&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;# define ifc_req    ifc_ifcu.ifcu_req   &lt;/span&gt;&lt;span class="cm"&gt;/* Array of structures.  */&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;结构体struct ifconf包含两个字段，第一个字段ifc_len表示第二个字段指向的数据buf的size。第二个字段是一个联合体。
++ &lt;strong&gt;ifc_len：&lt;/strong&gt;    数据区的大小
++ &lt;strong&gt;ifcu_buf：&lt;/strong&gt;   用户用户设置接口参数时，保存要传给内核的接口参数。
++ &lt;strong&gt;ifcu_req：&lt;/strong&gt;    用于用户向内核请求数据，从内核返回的接口信息。
+　　&lt;strong&gt;ifcu_req指向一个struct ifreq数组，数组的每一项存储着一个接口的名字和接口的ip。 因此，&lt;code&gt;ifc_len/sizeof(struct ifreq)&lt;/code&gt;就是本机的网络接口的数目。&lt;/strong&gt;
+　&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;                                                                                                                                                                                        &lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;net/if.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/ioctl.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/socket.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;netinet/in.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;arpa/inet.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#define MAX_IF_NUM 10  &lt;/span&gt;&lt;span class="c1"&gt;//假设本机最多10个网络接口&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[])&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt; 
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;ipDotBuf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;16&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;  &lt;span class="c1"&gt;//保存点分十进制地址&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt; &lt;span class="n"&gt;ifVec&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;MAX_IF_NUM&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifconf&lt;/span&gt; &lt;span class="n"&gt;ifConf&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;ifConf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifc_len&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifVec&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;ifConf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifc_buf&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;ifVec&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Len: %d &lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ifConf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifc_len&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;AF_INET&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SOCK_DGRAM&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;  &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;socket failed!&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="p"&gt;}&lt;/span&gt;  
+    &lt;span class="c1"&gt;//获取所有网络接口列表&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ioctl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SIOCGIFCONF&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;ifConf&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ioctl SIOCGIFCONF failed!&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Len: %d &lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ifConf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifc_len&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; 
+
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;ifPt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;ifEndPt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; 
+    &lt;span class="n"&gt;ifPt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;ifVec&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; 
+    &lt;span class="n"&gt;ifEndPt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)((&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;ifVec&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;ifConf&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ifc_len&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifPt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ifVec&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;ifPt&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;ifEndPt&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;ifPt&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;  
+        &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;ifreq&lt;/span&gt; &lt;span class="n"&gt;ifReq&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; 
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;ifPt&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;ifr_addr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sa_family&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;AF_INET&lt;/span&gt;  &lt;span class="p"&gt;)&lt;/span&gt;  
+                &lt;span class="k"&gt;continue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+        &lt;span class="cm"&gt;/*  打印ip地址  */&lt;/span&gt;
+        &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;%s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;inet_ntoa&lt;/span&gt;&lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="n"&gt;sockaddr_in&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ifPt&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;ifr_addr&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;sin_addr&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+     &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+ &lt;span class="p"&gt;}&lt;/span&gt;  
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;结果如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;windeal@ubuntu:Windeal$ ./a.out
+Len: 320
+Len: 64
+127.0.0.1
+192.168.1.106
+&lt;/pre&gt;&lt;/div&gt;</content><category term="ioctl"></category><category term="Unix"></category><category term="Linux"></category></entry><entry><title>无线MAC帧详解</title><link href="/wu-xian-maczheng-xiang-jie.html" rel="alternate"></link><published>2015-11-05T00:00:00+08:00</published><updated>2015-11-05T00:00:00+08:00</updated><author><name>Windeal.Li</name></author><id>tag:None,2015-11-05:/wu-xian-maczheng-xiang-jie.html</id><summary type="html">&lt;p&gt;Mac帧由三个基本域组成 Mac Header Frame Body FCS Frame Ctrl  Frame 含2Byte（16位），可以进一步分为以下子字段：&lt;/p&gt;</summary><content type="html">&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h1&gt;802.11 MAC帧（无线MAC帧）&lt;/h1&gt;
+&lt;p&gt;&lt;img alt="Paste_Image.png" src="/static/images/TCPIP/wirelessMacFrame01.png"&gt;&lt;/p&gt;
+&lt;p&gt;Mac帧由三个基本域组成：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Mac Header：&lt;/strong&gt;包括帧控制（ Frame Control） 、 时长（ Duration） 、 地址（ Address） 等&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Frame Body：&lt;/strong&gt;代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（ sub type） 决定。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;FCS：&lt;/strong&gt;    （ Frame Check Sequence， 帧校验序列） 用于保障帧数据完整性。
+　　我们主要关注Mac Header部门，我们来逐个分析下Mac Header中的字段&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Frame Ctrl&lt;/h3&gt;
+&lt;p&gt;Frame 含2Byte（16位），可以进一步分为以下子字段：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(1) Protocol Version：&lt;/strong&gt;
+　　代表802.11 MAC帧的版本号。 目前的值是0。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(2) Type和Subtype: &lt;/strong&gt;
+　　Type字段有00，01，10，11四种取值，将802.11中MAC帧分别划分为control、 data和management三种类型（Type=11保留）。
+　　Type与Subtype结合可以802.11MAC帧细分为以下类型（不全）。（本文后面对各个子类型进一步介绍）&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align="center"&gt;Type（b3b2)&lt;/th&gt;
+&lt;th align="center"&gt;类型描述&lt;/th&gt;
+&lt;th align="center"&gt;Subtype(b7-b4)&lt;/th&gt;
+&lt;th align="center"&gt;子类型描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;00&lt;/td&gt;
+&lt;td align="center"&gt;Management&lt;/td&gt;
+&lt;td align="center"&gt;0000/1&lt;/td&gt;
+&lt;td align="center"&gt;Association Request/Response&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;00&lt;/td&gt;
+&lt;td align="center"&gt;Management&lt;/td&gt;
+&lt;td align="center"&gt;0100/1&lt;/td&gt;
+&lt;td align="center"&gt;Probe  Request/Response&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;00&lt;/td&gt;
+&lt;td align="center"&gt;Management&lt;/td&gt;
+&lt;td align="center"&gt;1000&lt;/td&gt;
+&lt;td align="center"&gt;Beacon帧&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;00&lt;/td&gt;
+&lt;td align="center"&gt;Management&lt;/td&gt;
+&lt;td align="center"&gt;1101&lt;/td&gt;
+&lt;td align="center"&gt;Action帧&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;01&lt;/td&gt;
+&lt;td align="center"&gt;Control&lt;/td&gt;
+&lt;td align="center"&gt;1010&lt;/td&gt;
+&lt;td align="center"&gt;PS-POLL帧，（省电轮询）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;01&lt;/td&gt;
+&lt;td align="center"&gt;Control&lt;/td&gt;
+&lt;td align="center"&gt;1011&lt;/td&gt;
+&lt;td align="center"&gt;RTS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;01&lt;/td&gt;
+&lt;td align="center"&gt;Control&lt;/td&gt;
+&lt;td align="center"&gt;1100&lt;/td&gt;
+&lt;td align="center"&gt;CTS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;01&lt;/td&gt;
+&lt;td align="center"&gt;Control&lt;/td&gt;
+&lt;td align="center"&gt;1101&lt;/td&gt;
+&lt;td align="center"&gt;ACK&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;01&lt;/td&gt;
+&lt;td align="center"&gt;Data&lt;/td&gt;
+&lt;td align="center"&gt;0000&lt;/td&gt;
+&lt;td align="center"&gt;Data&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align="center"&gt;11&lt;/td&gt;
+&lt;td align="center"&gt;保留&lt;/td&gt;
+&lt;td align="center"&gt;0000-1111&lt;/td&gt;
+&lt;td align="center"&gt;保留&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;(4)To DS 和 From DS: &lt;/strong&gt;
+　　只用在数据类型的帧中。DS即Distribution System。 From DS和To Ds分别表明数据帧是否来自或去往DS。（这里的来自和去往分别对应最初的源地址，和最终的目的地址。如STA经DS发往另一个STA，则该帧既不来自DS，也不去往S，而是STA和STA之间的通信。）&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;To DS&lt;/th&gt;
+&lt;th&gt;From DS&lt;/th&gt;
+&lt;th&gt;含义&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;即不来自DS也不去往DS, 即STA与STA之间的通信。也可能是管理帧或控制帧。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;表明该帧有DS 发往非DS， 一般是AP发给STA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;表明该帧由非DS发往DS，一般是STA发给AP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;该帧来自DS，又去往DS，其实就是只带AP与AP之间的数据帧&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;(6) More Fragments: &lt;/strong&gt;
+　　表明数据是否分片。 只支持data和management帧类型。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(7) Retry: &lt;/strong&gt;
+　　如果该值为1， 表明是重传包。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(8) Power Management: &lt;/strong&gt;
+　　表明发送该帧的STA处于活跃模式还是处于省电模式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(9) More Data: &lt;/strong&gt;
+　　和省电模式有关。 AP会为那些处于省电模式下的STA缓冲一些数据帧， 而STA会定时查询是否有数据要接收。 该参数表示AP中还有缓冲的数据帧。 如果该值为0， 表明STA已经接收完数据帧了（ 下节将介绍省电模式相关的内容） 。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(10): Protected Frame: &lt;/strong&gt;
+　　表明数据是否加密。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;(11): Order: &lt;/strong&gt;
+　　 指明接收端必须按顺序处理该帧。&lt;/p&gt;
+&lt;h3&gt;Duration/ID&lt;/h3&gt;
+&lt;p&gt;Duration/ID域占2字节共16位， 其具体含义根据Type和Subtype的不同而变化， 不过大体就两种， 分别代表ID和Duration。&lt;/p&gt;
+&lt;h3&gt;Address (Address1~Address4)&lt;/h3&gt;
+&lt;p&gt;首先，我们要知道，这里的Address以Mac地址的形式表示。网络传输中，Mac地址需要考虑字节序。Mac地址，字节序为Big-endian， 即最高字节在前。比特序为Little-endian， 即最低位在前。
+　　802.11 MAC帧头部分共包含四个Address域（一个可选）， 但规范中却有五种地址定义， 分别如下：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;序号&lt;/th&gt;
+&lt;th&gt;地址定义&lt;/th&gt;
+&lt;th&gt;含义&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;BSSID&lt;/td&gt;
+&lt;td&gt;在基础型BSS中， 它为AP① 的地址。 而在IBSS中则是一个本地唯一MAC地址。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;目标地址    DA&lt;/td&gt;
+&lt;td&gt;MAC帧的最终目的地址 ， 可以是单播或组播地址。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;源地址        SA&lt;/td&gt;
+&lt;td&gt;MAC帧的最初源地址，  一般情况下都是单播地址。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;发送STA地址：TA&lt;/td&gt;
+&lt;td&gt;一次经WM（无限媒介）传输的发送端地址，类似于路由中某一跳的起点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;接收STA地址：RA&lt;/td&gt;
+&lt;td&gt;一次经WM（无限媒介）传输的接收端地址，类似于路由中某一跳的终点&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面我们看下MAC首部4个地址域 与 规范中5中地址的对应关系：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;To DS&lt;/th&gt;
+&lt;th&gt;From Ds&lt;/th&gt;
+&lt;th&gt;网络类型&lt;/th&gt;
+&lt;th&gt;Adress 1（接收端）&lt;/th&gt;
+&lt;th&gt;Address 2 （发送端）&lt;/th&gt;
+&lt;th&gt;Address 3&lt;/th&gt;
+&lt;th&gt;Address 4&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;IBSS&lt;/td&gt;
+&lt;td&gt;DA = RA&lt;/td&gt;
+&lt;td&gt;TA = SA&lt;/td&gt;
+&lt;td&gt;BSSID&lt;/td&gt;
+&lt;td&gt;未使用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;From AP&lt;/td&gt;
+&lt;td&gt;DA = RA&lt;/td&gt;
+&lt;td&gt;TA = BSSID&lt;/td&gt;
+&lt;td&gt;SA&lt;/td&gt;
+&lt;td&gt;未使用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;To AP&lt;/td&gt;
+&lt;td&gt;RA = BSSID&lt;/td&gt;
+&lt;td&gt;TA = SA&lt;/td&gt;
+&lt;td&gt;DA&lt;/td&gt;
+&lt;td&gt;未使用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;AP to AP&lt;/td&gt;
+&lt;td&gt;RA&lt;/td&gt;
+&lt;td&gt;TA&lt;/td&gt;
+&lt;td&gt;DA&lt;/td&gt;
+&lt;td&gt;SA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;SeqCtrl&lt;/h3&gt;
+&lt;p&gt;此字段用来丢弃重复帧和重复分片。包含两个子字段：Fragment Number 和Sequence Number。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Fragment Number：&lt;/strong&gt;用于分片帧&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sequence Number：&lt;/strong&gt;用于检验重复帧。如果设备收到的MAC帧的Sequence Number与之前收到的帧重复则丢弃。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Qos Ctrl(可选)&lt;/h3&gt;
+&lt;p&gt;此字段只出现在数据帧中，用以实现802.11e无限Qos功能。&lt;/p&gt;
+&lt;h3&gt;HT Control(可选)&lt;/h3&gt;
+&lt;p&gt;用于控制802.11n的“High-throughput”&lt;/p&gt;
+&lt;h3&gt;Frame Body&lt;/h3&gt;
+&lt;p&gt;代表数据域。 这部分内容的长度可变， 其具体存储的内容由帧类型（ type） 和子类型（subtype） 决定。&lt;/p&gt;
+&lt;h3&gt;FCS&lt;/h3&gt;
+&lt;p&gt;Frame Check Sequence， 帧校验序列， 用于保障帧数据完整性。&lt;/p&gt;
+&lt;h2&gt;帧类型&lt;/h2&gt;
+&lt;p&gt;前面在介绍Type和SubType字段的时候，我们已经知道这两个字段将无线MAC帧分为不同的类型，现在我们来进一步介绍下不同的无线MAC帧&lt;/p&gt;
+&lt;h3&gt;数据帧&lt;/h3&gt;
+&lt;p&gt;负责传送数据报文&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;帧类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Data&lt;/td&gt;
+&lt;td&gt;货真价实的数据帧， 802.11数据报文的承载体&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NULL&lt;/td&gt;
+&lt;td&gt;只有802.11 MAC首部 和FCS字段 在802.11中，Station可以通过NULL通知基站自己省电模式的改变&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;控制帧&lt;/h3&gt;
+&lt;p&gt;控制帧主要用来协助数据帧的传输，负责无线区域的清空，信道的获取等，还用于收取数据时的确认。下面是几种常用的控制帧。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;帧类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;RTS/CTS&lt;/td&gt;
+&lt;td&gt;负责无限信道的清空，取得媒介控制权&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PS-Poll&lt;/td&gt;
+&lt;td&gt;当Station从省电模式醒来，可以发送PS-Poll帧，从基站获取缓存帧&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ACK&lt;/td&gt;
+&lt;td&gt;无线通信接收端通过回应ACK帧，向发送端确认接收到了报文&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Block Ack Request/ Block Ack&lt;/td&gt;
+&lt;td&gt;802.11n中，为了提升MAC层的效率，使用BlockACK机制对收到的一批数据帧进行一次性确认， Block Ack Request/ Block Ack用来简历BlockACK通道&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;管理帧&lt;/h3&gt;
+&lt;p&gt;负责对无线网络的管理，包括网络信息通告、加入或退出无线网络，频谱管理等。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;帧类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Beacon&lt;/td&gt;
+&lt;td&gt;信标帧，周期性宣告某个802.11网络的存在，以及支持各类无线参数，比如网络名称（SSID），支持的速率，认证类型等。也包含基站为进入省电模式的Station缓存帧的信息。　｜&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Association Request/Response&lt;/td&gt;
+&lt;td&gt;关联请求/应答， 当Station 师徒加入某个802.11网络，Station和基站关联时会使用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Disassociation&lt;/td&gt;
+&lt;td&gt;去关联帧，Station和基站都可以发送Disassociation解除和对方的关联&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Authentication/Deauthentication&lt;/td&gt;
+&lt;td&gt;认证/去认证帧，Station 和 基站关联是使用，用于无限身份认证&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Probe Request/Response&lt;/td&gt;
+&lt;td&gt;探测帧， Station后基站 均可以发送该帧探测周围有那些802.11网络。接收到的基站需回应Probe Response， Probe Respoonse 帧中包含了Beacon帧所有的参数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Action&lt;/td&gt;
+&lt;td&gt;802.11h标准中添加的帧。用来要求802.11设备才去各类行动进行频谱管理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</content><category term="wireless"></category><category term="MAC"></category></entry></feed>

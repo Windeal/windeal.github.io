@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Windeal's Home - bugs</title><link href="/" rel="alternate"></link><link href="/feeds/bugs.atom.xml" rel="self"></link><id>/</id><updated>2015-11-29T00:00:00+08:00</updated><entry><title>unregister_netdevice: waiting for eth1 to become free？错误</title><link href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html" rel="alternate"></link><published>2015-11-29T00:00:00+08:00</published><updated>2015-11-29T00:00:00+08:00</updated><author><name>Windeal.Li</name></author><id>tag:None,2015-11-29:/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html</id><summary type="html">&lt;p&gt;然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误： unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了
+前段日子在做vlan的时候遇见一个麻烦，问题大致是这样的：&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Description：&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;路由器仅有一张网卡，phy0，通过vlan划分WAN端和LAN端
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    vconfig add phy0 1  #lan phy0.1
+    vconfig add phy0 2 #wan phy0.2，（我通过ip link改了名字，使得phy0.2 更名为eth1）
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误：
+unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;碰上问题时，进行了些分析，其间走了不少弯路，这里也顺便提下走的弯路了。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Analyse 1：&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;应该是由程序占用了eth1，那么，先找出占用它的程序。
+首先看了下所有正在运行的进程，kill掉比较可能的进程，rmmod掉可能占用eth1的模块（包括一个名为enet的模块，这里先提一下，因为最后分析出来其实是enet模块导致了这个错误）。结果执行vconfig rem eth1 命令还是会出现错误，并宕机。
+接着通过循环，kill掉所有能kill掉的进程，问题依然没有解决。
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Analyse 2：&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;查资料，发现错误现象应该是：eth1设备的引用计数不为0，导致eth1的除名函数在netdev_run_todo中陷入死循环（循环判断eth1的引用计数是否为0），然后导致程序宕机。
+乍一看，跟Analyse1 的分析结果差不多，其实不然。
+ 其主要区别在于：
+    在Analyse 1中，我们认为，eth1是否程序占用了，那么我们把程序down/kill掉，就可以解除占用。而在Analyse 2中，eth1引用计数不为0，不一定是eth1被占用了，也可能因为占用它的程序/模块在自身down掉的时候，没有吧引用计数减一造成的。
+在网上查了好久，出现unregister_netdevice: waiting for eth1 to become free？的原因可能是某一处代码中使用了dev_hold而没有使用dev_put。
+dev_hold和dev_put是配对使用的，一个用来引用计数加一，一个用于引用计数减一。
+查看模块代码，没有发现单独直接使用dev_hold的情况。那会不会是简介调用呢，仔细查找了好久，果然是间接调用。
+在我们一些模块代码中，经常会通过dev_get_by_name来获取设备信息。而dev_get_by_name封装了dev_hold，导致引用计数加一。由于dev_get_by_name是内核提供的接口，不熟悉的coder很可能不晓得这点，也没有注意到需要调用dev_put.，于是便有了上面所说的错误。
+&lt;/pre&gt;&lt;/div&gt;</content><category term="Linux"></category><category term="网络，内核"></category></entry></feed>

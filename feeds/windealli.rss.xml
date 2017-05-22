@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>Windeal's Home - Windeal.Li</title><link>/</link><description></description><lastBuildDate>Mon, 15 May 2017 00:00:00 +0800</lastBuildDate><item><title>gcc升级到简单方法</title><link>/gccsheng-ji-dao-jian-dan-fang-fa.html</link><description>&lt;p&gt;gcc 升级&lt;/p&gt;
+&lt;p&gt;升级gcc目前知道两种方法&lt;/p&gt;
+&lt;p&gt;直接编译安装新版本的gcc （目测前方坑很多）
+安装devtoolset来升级gcc， （网上说这种方式很简单）
+下面通过devtoolset来升级下gcc 
+devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 
+gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
+下面是升级步骤&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;yum install centos-release-scl-rh centos-release-scl
+yum check-update
+yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;升级之后需要启动devtoolset：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;source /opt/rh/devtoolset-3/enable&lt;/code&gt;
+测试发现当前命令似乎只对本次shell有效，所以可能需要把这条命令加入到~/.bashrc中 …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Windeal.Li</dc:creator><pubDate>Mon, 15 May 2017 00:00:00 +0800</pubDate><guid isPermaLink="false">tag:None,2017-05-15:/gccsheng-ji-dao-jian-dan-fang-fa.html</guid><category>gcc</category></item><item><title>unregister_netdevice: waiting for eth1 to become free？错误</title><link>/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html</link><description>&lt;p&gt;然后因为要做Vlan-tag的功能，在实现过程中需要重新配置vlan，（问题主要在其中一部需要删除eth1，是通过vconfig rem eth1删除的),但是在执行这条删除命令的时候出现了标题所示的错误： unregister_netdevice: waiting for eth1 to become free？，然后板子就宕掉了
+前段日子在做vlan的时候遇见一个麻烦，问题大致是这样的：&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Windeal.Li</dc:creator><pubDate>Sun, 29 Nov 2015 00:00:00 +0800</pubDate><guid isPermaLink="false">tag:None,2015-11-29:/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html</guid><category>Linux</category><category>网络，内核</category></item><item><title>ioctl 获取网络接口信息</title><link>/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html</link><description>&lt;p&gt;网络程序（尤其是服务器程序）经常在程序启动后使用ioctl后去所在主机的全部网络接口想你系。包括：接口地址、是否支持广播、是否支持多播等。本文主要介绍ioctl的一些基本知识，以及如何使用ioctl获取网络接口信&amp;gt; ioctl是用来操纵特殊文件的底层设备参数。我们看下ioctl的用法:&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Windeal.Li</dc:creator><pubDate>Wed, 25 Nov 2015 00:00:00 +0800</pubDate><guid isPermaLink="false">tag:None,2015-11-25:/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html</guid><category>ioctl</category><category>Unix</category><category>Linux</category></item><item><title>无线MAC帧详解</title><link>/wu-xian-maczheng-xiang-jie.html</link><description>&lt;p&gt;Mac帧由三个基本域组成 Mac Header Frame Body FCS Frame Ctrl  Frame 含2Byte（16位），可以进一步分为以下子字段：&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Windeal.Li</dc:creator><pubDate>Thu, 05 Nov 2015 00:00:00 +0800</pubDate><guid isPermaLink="false">tag:None,2015-11-05:/wu-xian-maczheng-xiang-jie.html</guid><category>wireless</category><category>MAC</category></item></channel></rss>
