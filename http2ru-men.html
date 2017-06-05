@@ -11,7 +11,7 @@
 
         <meta name="author" content="Windeal.Li" />
         <meta name="keywords" content="http" />
-        <meta name="description" content="什么是HTTP/2 HTTP/2是HTTP协议的新版本，是下一代的HTTP协议。 HTTP/2由IETF（互联网工程任务组）的Hypertext Transfer Protocol Bis工作小组进行开发。 是自1999年HTTP1.1发布后的搜狐个更新。 HTTP/2 与 HTTP1.1、SPDY是什么关系 HTTP/2是HTTP/1.1的更新版本，HTTP/2是HTTP/1.1的下一代版本。 SPDY是Google开发的基于TCP的传输层协议，并不是正式的HTTP协议，不是用来替代HTTP某个版本的协议，而是对HTTP/1.1协议的增强。由于SPDY协议的良好表现，研究HTTP协议的工作小组才开始讨论、并最终确定开发新一代的HTTP协议（即HTTP/2)。HTTP/2是基于SPDY/2开发的。 为什么要有HTTP/2 我们知道，HTTP/1.1已经在Web上使用了十五年以上，在全世界已经得到广泛应用。那么为什么又要制定HTTP …" />
+        <meta name="description" content="什么是HTTP/2 HTTP/2是HTTP协议的新版本，是下一代的HTTP协议。 HTTP/2由IETF（互联网工程任务组）的Hypertext Transfer Protocol Bis工作小组进行开发。 是自1999年HTTP1.1发布后的首个更新。 HTTP/2 与 HTTP1.1、SPDY是什么关系 HTTP/2是HTTP/1.1的更新版本，HTTP/2是HTTP/1.1的下一代版本。 SPDY是Google开发的基于TCP的传输层协议，并不是正式的HTTP协议，不是用来替代HTTP某个版本的协议，而是对HTTP/1.1协议的增强。由于SPDY协议的良好表现，研究HTTP协议的工作小组才开始讨论、并最终确定开发新一代的HTTP协议（即HTTP/2)。HTTP/2是基于SPDY/2开发的。 为什么要有HTTP/2 我们知道，HTTP/1.1已经在Web上使用了十五年以上，在全世界已经得到广泛应用。那么为什么又要制定HTTP …" />
 
     <!-- Bootstrap -->
 		<!-- Bootstrap core CSS -->
@@ -89,7 +89,7 @@ Windeal's Home            </a>
             <div class="entry-content">
                 <h1>什么是HTTP/2</h1>
 <p>HTTP/2是HTTP协议的新版本，是下一代的HTTP协议。</p>
-<p>HTTP/2由IETF（互联网工程任务组）的Hypertext Transfer Protocol Bis工作小组进行开发。 是自1999年HTTP1.1发布后的搜狐个更新。</p>
+<p>HTTP/2由IETF（互联网工程任务组）的Hypertext Transfer Protocol Bis工作小组进行开发。 是自1999年HTTP1.1发布后的首个更新。</p>
 <h2>HTTP/2 与 HTTP1.1、SPDY是什么关系</h2>
 <p>HTTP/2是HTTP/1.1的更新版本，HTTP/2是HTTP/1.1的下一代版本。</p>
 <p>SPDY是Google开发的基于TCP的传输层协议，并不是正式的HTTP协议，不是用来替代HTTP某个版本的协议，而是对HTTP/1.1协议的增强。由于SPDY协议的良好表现，研究HTTP协议的工作小组才开始讨论、并最终确定开发新一代的HTTP协议（即HTTP/2)。HTTP/2是基于SPDY/2开发的。</p>
@@ -104,16 +104,19 @@ Windeal's Home            </a>
 <p>相比之前，现今Web页面变得更加的资源密集（也就是一个页面上的资源更多了、更复杂了），需要更先进的技术来高效地加载这些页面。</p>
 <h2>HTTP/1.1本身的瓶颈</h2>
 <ol>
-<li>HTTP/1.1的HOL问题（head-of-line)</li>
+<li>
+<p>HTTP/1.1的HOL问题（head-of-line)
+   HTTP/1.1中，每个TCP连接只能允许存在一个未决的HTTP请求。如果前面的请求因为某些原因不能收到应答，后面的请求也就没办法发送。</p>
+</li>
+<li>
+<p>过多的并行连接有可能影响性能
+   一方面，过多的TCP连接会由于拥塞控制破坏性能和网络环境，
+   另一方面，浏览器发起过多并发连接会导致（共享）网络资源的使用不公平（其它应用只能得到更能少的网络资源）。</p>
+</li>
+<li>
+<p>大量的请求也意味着有很多冗余的（复制）的报文在网络线路上。</p>
+</li>
 </ol>
-<p>HTTP/1.1中，每个TCP连接只能允许存在一个未决的HTTP请求。如果前面的请求因为某些原因不能收到应答，后面的请求也就没办法发送。
-2. 过多的并行连接有可能影响性能</p>
-<p>一方面，过多的TCP连接会由于拥塞控制破坏性能和网络环境，</p>
-<p>另一方面，浏览器发起过多并发连接会导致（共享）网络资源的使用不公平（其它应用只能得到更能少的网络资源）。</p>
-<ol>
-<li>大量的请求也意味着有很多冗余的（复制）的报文在网络线路上。</li>
-</ol>
-<p>​</p>
 <h1>HTTP/2 有哪些特点</h1>
 <p>这里主要通过对比HTTP/2与HTTP/1.1的主要区别来介绍HTTP/2的特点</p>
 <ul>
@@ -136,7 +139,7 @@ Windeal's Home            </a>
 <p>不过HTTP/2需要依赖工具才能在telnet上传输。</p>
 <h2>HTTP/2 的多路复用</h2>
 <p>HTTP/2的多路复用机制可以帮助解决HTTP/1.x的HOL问题。 </p>
-<p>尽管HTTP/1.1识图通过pipeline机制解决HOL问题，但在许多场景下pipeline并不能达到预期的效果，而且中间链路上的节点可能并不支持pipeline。</p>
+<p>尽管HTTP/1.1试图通过pipeline机制解决HOL问题，但在许多场景下pipeline并不能达到预期的效果，而且中间链路上的节点可能并不支持pipeline。</p>
 <p>HTTP/2的多路复用机制允许多个请求和应答同时在一条TCP连接上运行.</p>
 <h2>HTTP/2 采用单条连接</h2>
 <p>对于HTTP/1.x协议，浏览器会为每个源站打开4~8条连接，而现在许多网页通常使用了多个源站的内容，这就意味着加载一个页面可能打开几十条的TCP连接。一个应用程序同时打开这么多的连接破坏了TCP的默认设定，会有缓冲去过载的风险，进而引起阻塞和重传。</p>
@@ -167,6 +170,11 @@ Windeal's Home            </a>
              gcc升级到简单方法
          </a>
      </li>
+     <li> 下一篇：
+         <a href="/httpszhi-shi-zheng-li-shang.html">
+             HTTPS知识整理(上）
+         </a>
+     </li>
 </ul>
 </section>
    <!--页面主题内容-->
@@ -179,6 +187,9 @@ Windeal's Home            </a>
 <h2>最新文章</h2>
 <ul id="recent_posts">
   <li class="post">
+	  <a href="/httpszhi-shi-zheng-li-shang.html">HTTPS知识整理(上）</a>
+  </li>
+  <li class="post">
 	  <a href="/http2ru-men.html">HTTP2入门</a>
   </li>
   <li class="post">
@@ -190,13 +201,16 @@ Windeal's Home            </a>
   <li class="post">
 	  <a href="/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html">ioctl 获取网络接口信息</a>
   </li>
-  <li class="post">
-	  <a href="/wu-xian-maczheng-xiang-jie.html">无线MAC帧详解</a>
-  </li>
 </ul>
 </section><!--相关文章-->
 
 <section>
+	<h2>相关文章</h2>
+    <ul id="related_posts">
+        <li class="posts">
+			<a href="/httpszhi-shi-zheng-li-shang.html">HTTPS知识整理(上）</a>
+		</li>
+    </ul>
 </section>
 
 
