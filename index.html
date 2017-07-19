@@ -61,6 +61,38 @@ Windeal's Home            </a>
 		<div class="col-sm-9">
                                                                                                                                                                                          
             <article>
+                <h2><a href="/shi-yong-curljin-xing-http2ce-shi.html">使用curl进行http2测试</a></h2>
+                <div class="summary"><p>curl是常用的http测试工具，它能模拟http客户端发送http请求，与http服务器进行通信。</p>
+<p>curl 支持指定协议与服务端进行通信。</p>
+<div class="highlight"><pre><span></span>windeal@ubuntu:src$ curl --help | grep http
+-0, --http1.0 Use HTTP 1.0 (H)
+--http1.1 Use HTTP 1.1 (H)
+--http2 Use HTTP 2 (H)
+windeal@ubuntu:src$
+</pre></div>
+
+
+<p>现在许多http服务器都升级到了http2，我们尝试用curl 访问http2的服务器</p>
+<div class="highlight"><pre><span></span>windeal@ubuntu:src$ curl -I --http2 nghttp2.org
+curl: (1) Unsupported protocol …</pre></div>
+                    <a class="btn btn-default btn-xs" href="/shi-yong-curljin-xing-http2ce-shi.html">more ...</a>
+                </div>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        Windeal.Li
+    </span>
+  </span>
+  <time datetime="2017-07-19T00:00:00+08:00" pubdate>
+	  Wed 19 July 2017
+  </time>
+  <span class="categories"><a class='category' href='/category/tools.html'>tools</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/curl-http2.html">curl http2</a>  </span>
+</p>            </article>
+            <hr/>
+            <article>
                 <h2><a href="/httpszhi-shi-zheng-li-shang.html">HTTPS知识整理(上）</a></h2>
                 <div class="summary"><h1>HTTPS 概述</h1>
 <h2>什么是HTTPS</h2>
@@ -142,11 +174,14 @@ Windeal's Home            </a>
                 <h2><a href="/gccsheng-ji-dao-jian-dan-fang-fa.html">gcc升级到简单方法</a></h2>
                 <div class="summary"><p>gcc 升级</p>
 <p>升级gcc目前知道两种方法</p>
-<p>直接编译安装新版本的gcc （目测前方坑很多）
-安装devtoolset来升级gcc， （网上说这种方式很简单）
-下面通过devtoolset来升级下gcc 
-devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 
-gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
+<ul>
+<li>直接编译安装新版本的gcc （目测前方坑很多）</li>
+<li>安装devtoolset来升级gcc， （网上说这种方式很简单）</li>
+</ul>
+<p>下面通过devtoolset来升级下gcc
+devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，
+以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 </p>
+<p>gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
 下面是升级步骤</p>
 <div class="highlight"><pre><span></span>yum install centos-release-scl-rh centos-release-scl
 yum check-update
@@ -245,6 +280,9 @@ yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
 <h2>最新文章</h2>
 <ul id="recent_posts">
   <li class="post">
+	  <a href="/shi-yong-curljin-xing-http2ce-shi.html">使用curl进行http2测试</a>
+  </li>
+  <li class="post">
 	  <a href="/httpszhi-shi-zheng-li-shang.html">HTTPS知识整理(上）</a>
   </li>
   <li class="post">
@@ -255,9 +293,6 @@ yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
   </li>
   <li class="post">
 	  <a href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html">unregister_netdevice: waiting for eth1 to become free？错误</a>
-  </li>
-  <li class="post">
-	  <a href="/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html">ioctl 获取网络接口信息</a>
   </li>
 </ul>
 </section><!--相关文章-->

@@ -11,7 +11,7 @@
 
         <meta name="author" content="Windeal.Li" />
         <meta name="keywords" content="gcc" />
-        <meta name="description" content="gcc 升级 升级gcc目前知道两种方法 直接编译安装新版本的gcc （目测前方坑很多） 安装devtoolset来升级gcc， （网上说这种方式很简单） 下面通过devtoolset来升级下gcc devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 下面是升级步骤 yum install centos-release-scl-rh centos-release-scl yum check-update yum install devtoolset-3-gcc devtoolset-3-gcc-c++ 升级之后需要启动devtoolset： source /opt/rh/devtoolset-3/enable 测试发现当前命令似乎只对本次shell有效，所以可能需要把这条命令加入到~/.bashrc中 …" />
+        <meta name="description" content="gcc 升级 升级gcc目前知道两种方法 直接编译安装新版本的gcc （目测前方坑很多） 安装devtoolset来升级gcc， （网上说这种方式很简单） 下面通过devtoolset来升级下gcc devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4， 以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 下面是升级步骤 yum install centos-release-scl-rh centos-release-scl yum check-update yum install devtoolset-3-gcc devtoolset-3-gcc-c++ 升级之后需要启动devtoolset： source /opt/rh/devtoolset-3/enable 测试发现当前命令似乎只对本次shell有效，所以可能需要把这条命令加入到~/.bashrc中 …" />
 
     <!-- Bootstrap -->
 		<!-- Bootstrap core CSS -->
@@ -89,11 +89,14 @@ Windeal's Home            </a>
             <div class="entry-content">
                 <p>gcc 升级</p>
 <p>升级gcc目前知道两种方法</p>
-<p>直接编译安装新版本的gcc （目测前方坑很多）
-安装devtoolset来升级gcc， （网上说这种方式很简单）
-下面通过devtoolset来升级下gcc 
-devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 
-gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
+<ul>
+<li>直接编译安装新版本的gcc （目测前方坑很多）</li>
+<li>安装devtoolset来升级gcc， （网上说这种方式很简单）</li>
+</ul>
+<p>下面通过devtoolset来升级下gcc
+devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4，
+以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。 </p>
+<p>gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 
 下面是升级步骤</p>
 <div class="highlight"><pre><span></span>yum install centos-release-scl-rh centos-release-scl
 yum check-update
@@ -135,6 +138,9 @@ yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
 <h2>最新文章</h2>
 <ul id="recent_posts">
   <li class="post">
+	  <a href="/shi-yong-curljin-xing-http2ce-shi.html">使用curl进行http2测试</a>
+  </li>
+  <li class="post">
 	  <a href="/httpszhi-shi-zheng-li-shang.html">HTTPS知识整理(上）</a>
   </li>
   <li class="post">
@@ -145,9 +151,6 @@ yum install devtoolset-3-gcc  devtoolset-3-gcc-c++
   </li>
   <li class="post">
 	  <a href="/unregister_netdevice-waiting-for-eth1-to-become-freecuo-wu.html">unregister_netdevice: waiting for eth1 to become free？错误</a>
-  </li>
-  <li class="post">
-	  <a href="/ioctl-huo-qu-wang-luo-jie-kou-xin-xi.html">ioctl 获取网络接口信息</a>
   </li>
 </ul>
 </section><!--相关文章-->
