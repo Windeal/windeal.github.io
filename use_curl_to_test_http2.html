@@ -1,0 +1,295 @@
+<!--processed for each article-->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title>使用curl进行http2测试 - Windeal's Home</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--上述3个meta标签**必须**放在前面，任何其他内容都**必须**跟随其后-->
+
+        <meta name="author" content="windealli" />
+        <meta name="keywords" content="Http2,curl" />
+        <meta name="description" content="curl是常用的http测试工具，它能模拟http客户端发送http请求，与http服务器进行通信。通过配置，curl也可以用来测试http2." />
+
+    <!-- Bootstrap -->
+		<!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+		<!-- Bootstrap theme -->
+		<link href="/theme/css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<!--百度统计-->
+<!--百度统计-->
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?ebe135bbd1292a4b3b8d4a0b3406c42a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	<!--百度站长平台-->
+	<meta name="baidu-site-verification" content="GYyFYVIoFx" />
+	
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <a href="/" class="navbar-brand">
+Windeal's Home            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">我的博客</a></li>
+                    <li><a href="/categories.html">分类目录</a></li>
+                    <li><a href="/pages/aboutme.html">关于博主</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</nav> <!-- /.navbar -->
+
+
+<div class="container theme=showcase" role='main' style="margin-top:50px;">
+    <div class="row">
+		<div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/use_curl_to_test_http2.html"
+                       rel="bookmark"
+                       title="Permalink to 使用curl进行http2测试">
+                        使用curl进行http2测试
+                    </a>
+                </h1>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        windealli
+    </span>
+  </span>
+  <time datetime="2017-06-09T00:00:00+08:00" pubdate>
+	  周五 09 六月 2017
+  </time>
+  <span class="categories"><a class='category' href='/category/protocol.html'>protocol</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/http2.html">Http2</a>,    <a class="category" href="/tag/curl.html">curl</a>  </span>
+</p>            </header>
+            <div class="entry-content">
+                <p>curl是常用的http测试工具，它能模拟http客户端发送http请求，与http服务器进行通信。</p>
+<p>curl 支持指定协议与服务端进行通信。</p>
+<div class="highlight"><pre><span></span>windeal@ubuntu:src$ curl --help | grep http
+-0, --http1.0 Use HTTP 1.0 (H)
+--http1.1 Use HTTP 1.1 (H)
+--http2 Use HTTP 2 (H)
+windeal@ubuntu:src$
+</pre></div>
+
+
+<p>现在许多http服务器都升级到了http2，我们尝试用curl 访问http2的服务器</p>
+<div class="highlight"><pre><span></span>windeal@ubuntu:src$ curl -I --http2 nghttp2.org
+curl: (1) Unsupported protocol
+windeal@ubuntu:src$
+</pre></div>
+
+
+<p>发现curl本身并不支持http2协议。（curl只是提供了use http2的接口，但本身不支持http2协议）</p>
+<p>curl可以通过第三方的http2库（nghttp2）来实现对http2的支持。</p>
+<h2>安装nghttp2库</h2>
+<p>https://github.com/nghttp2/nghttp2/releases 下载nghttp2，并编译安装。</p>
+<h3>安装编译工具</h3>
+<div class="highlight"><pre><span></span>sudo apt-get install git g++ make binutils autoconf automake autotools-dev libtool pkg-config \
+  zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev \
+  libjemalloc-dev cython python3-dev python-setuptools
+</pre></div>
+
+
+<h3>安装nghttp2</h3>
+<div class="highlight"><pre><span></span>$ wget https://github.com/nghttp2/nghttp2/releases/download/vX.Y.Z/nghttp2-X.Y.Z.tar.bz2
+$ tar xf nghttp2-X.Y.Z.tar.bz2
+$ <span class="nb">cd</span> nghttp2-X.Y.Z
+$ ./configure
+$ make
+$ make install
+</pre></div>
+
+
+<p>如果你下载的是source code，则根目录下并没有configure文件，需要通过下面步骤生成</p>
+<div class="highlight"><pre><span></span>$ autoreconf -i
+$ automake
+$ autoconf
+</pre></div>
+
+
+<p>如果有其它编译问题，可以查看REAME.rst文件。</p>
+<h2>升级curl</h2>
+<div class="highlight"><pre><span></span>windeal@ubuntu:opt$ wget https://curl.haxx.se/download/curl-7.54.0.tar.bz2
+windeal@ubuntu:opt$ tar -jvxf curl-7.54.0.tar.bz2
+windeal@ubuntu:opt$ cd curl-7.54.0/
+windeal@ubuntu:curl-7.54.0$ ./configure --with-nghttp2=/usr/local --with-ssl
+windeal@ubuntu:curl-7.54.0$ make
+windeal@ubuntu:curl-7.54.0$ sudo make install
+windeal@ubuntu: sudo echo &#39;/usr/local/lib&#39; &gt; /etc/ld.so.conf.d/local.conf
+windeal@ubuntu: sudo ldconfig
+</pre></div>
+
+
+<p>顺便贴上./configure的结果，一遍大家遇到问题时做参考:</p>
+<div class="highlight"><pre><span></span>curl version: 7.54.0
+Host setup: x86_64-pc-linux-gnu
+Install prefix: /usr/local
+Compiler: gcc
+SSL support: enabled (OpenSSL)
+SSH support: no (--with-libssh2)
+zlib support: enabled
+GSS-API support: no (--with-gssapi)
+TLS-SRP support: enabled
+resolver: default (--enable-ares / --enable-threaded-resolver)
+IPv6 support: enabled
+Unix sockets support: enabled
+IDN support: no (--with-{libidn2,winidn})
+Build libcurl: Shared=yes, Static=yes
+Built-in manual: enabled
+--libcurl option: enabled (--disable-libcurl-option)
+Verbose errors: enabled (--disable-verbose)
+SSPI support: no (--enable-sspi)
+ca cert bundle: /etc/ssl/certs/ca-certificates.crt
+ca cert path: no
+ca fallback: no
+LDAP support: no (--enable-ldap / --with-ldap-lib / --with-lber-lib)
+LDAPS support: no (--enable-ldaps)
+RTSP support: enabled
+RTMP support: no (--with-librtmp)
+metalink support: no (--with-libmetalink)
+PSL support: no (libpsl not found)
+HTTP2 support: enabled (nghttp2)
+Protocols: DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS POP3 POP3S RTSP SMB SMBS SMTP SMTPS TELNET TFTP
+</pre></div>
+
+
+<h2>测试</h2>
+<div class="highlight"><pre><span></span><span class="nt">windeal</span><span class="p">@</span><span class="k">ubuntu</span><span class="p">:</span><span class="nd">curl-7</span><span class="p">.</span><span class="nc">54</span><span class="p">.</span><span class="nc">0</span><span class="o">$</span> <span class="nt">curl</span> <span class="nt">-I</span> <span class="nt">--http2</span> <span class="nt">nghttp2</span><span class="p">.</span><span class="nc">org</span>
+<span class="nt">HTTP</span><span class="o">/</span><span class="nt">1</span><span class="p">.</span><span class="nc">1</span> <span class="nt">101</span> <span class="nt">Switching</span> <span class="nt">Protocols</span>
+<span class="nt">Connection</span><span class="o">:</span> <span class="nt">Upgrade</span>
+<span class="nt">Upgrade</span><span class="o">:</span> <span class="nt">h2c</span>
+
+<span class="nt">HTTP</span><span class="o">/</span><span class="nt">2</span> <span class="nt">200</span>
+<span class="nt">date</span><span class="o">:</span> <span class="nt">Tue</span><span class="o">,</span> <span class="nt">18</span> <span class="nt">Jul</span> <span class="nt">2017</span> <span class="nt">16</span><span class="p">:</span><span class="nd">12</span><span class="p">:</span><span class="nd">14</span> <span class="nt">GMT</span>
+<span class="nt">content-type</span><span class="o">:</span> <span class="nt">text</span><span class="o">/</span><span class="nt">html</span>
+<span class="nt">last-modified</span><span class="o">:</span> <span class="nt">Sun</span><span class="o">,</span> <span class="nt">02</span> <span class="nt">Jul</span> <span class="nt">2017</span> <span class="nt">08</span><span class="p">:</span><span class="nd">58</span><span class="p">:</span><span class="nd">08</span> <span class="nt">GMT</span>
+<span class="nt">etag</span><span class="o">:</span> <span class="s2">&quot;5958b5a0-19e1&quot;</span>
+<span class="nt">accept-ranges</span><span class="o">:</span> <span class="nt">bytes</span>
+<span class="nt">content-length</span><span class="o">:</span> <span class="nt">6625</span>
+<span class="nt">x-backend-header-rtt</span><span class="o">:</span> <span class="nt">0</span><span class="p">.</span><span class="nc">001355</span>
+<span class="nt">server</span><span class="o">:</span> <span class="nt">nghttpx</span>
+<span class="nt">via</span><span class="o">:</span> <span class="nt">2</span> <span class="nt">nghttpx</span>
+<span class="nt">x-frame-options</span><span class="o">:</span> <span class="nt">SAMEORIGIN</span>
+<span class="nt">x-xss-protection</span><span class="o">:</span> <span class="nt">1</span><span class="p">;</span> <span class="nt">mode</span><span class="o">=</span><span class="nt">block</span>
+<span class="nt">x-content-type-options</span><span class="o">:</span> <span class="nt">nosniff</span>
+</pre></div>
+
+
+<p><strong>第一次测试其实是失败了，后面发现是curl没有真正更新， 系统的curl还是旧的版本 </strong>
+具体原因还不清楚，我直接 <code>cp curl-7.54.0/src/curl /usr/bin/</code></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+	
+<!--邻居导航-->
+<section>
+ <ul>
+     <li> 上一篇：
+         <a href="/brief_intro_htt2.html">
+             HTTP2 入门
+         </a>
+     </li>
+     <li> 下一篇：
+         <a href="/update_gcc_to_support_cpp11.html">
+             gcc升级的简单方法
+         </a>
+     </li>
+</ul>
+</section>
+   <!--页面主题内容-->
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div>
+
+<section>
+<h2>最新文章</h2>
+<ul id="recent_posts">
+  <li class="post">
+	  <a href="/sync_async_nonblock.html">同步异步与阻塞非阻塞</a>
+  </li>
+  <li class="post">
+	  <a href="/update_gcc_to_support_cpp11.html">gcc升级的简单方法</a>
+  </li>
+  <li class="post">
+	  <a href="/use_curl_to_test_http2.html">使用curl进行http2测试</a>
+  </li>
+  <li class="post">
+	  <a href="/brief_intro_htt2.html">HTTP2 入门</a>
+  </li>
+  <li class="post">
+	  <a href="/understand_https.html">深入浅出HTTPS</a>
+  </li>
+</ul>
+</section><!--相关文章-->
+
+<section>
+	<h2>相关文章</h2>
+    <ul id="related_posts">
+        <li class="posts">
+			<a href="/brief_intro_htt2.html">HTTP2 入门</a>
+		</li>
+    </ul>
+</section>
+
+
+</div>            </aside>
+        </div>
+    </div>
+
+<!--页面底部-->
+
+<footer class='footer' style="margin-top:100px">
+  <p>
+		Copyright &copy;  2017&ndash;2018  Windeal
+  </p>
+</footer></div>
+
+	<!--百度站长平台-->
+<!--百度站长-->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+	<script src="/theme/js/bootstrap.js"></script>
+	<script src="/theme/js/bootstrap.min.js"></script>
+	<script src="/theme/js/npm.js"></script>
+
+</body>
+</html>
