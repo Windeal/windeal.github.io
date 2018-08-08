@@ -182,7 +182,7 @@ Using these definitions, the first four I/O models—blocking, nonblocking, I/O 
 <div id="gitment"></div>
 
 <script>
-    var issue_id = window.location.pathname.split('/')[-1];
+    var issue_id = window.location.pathname.split('/').pop();
     var gitment = new Gitment({
       // id: '页面 ID', // 可选。默认为 location.href
       id: issue_id,
