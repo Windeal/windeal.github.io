@@ -227,9 +227,10 @@ Protocols: DICT FILE FTP FTPS GOPHER HTTP HTTPS IMAP IMAPS POP3 POP3S RTSP SMB S
 <div id="gitment"></div>
 
 <script>
+    var issue_id = window.location.pathname.split('/')[-1];
     var gitment = new Gitment({
       // id: '页面 ID', // 可选。默认为 location.href
-      id: location.href.split('/')[-1],
+      id: issue_id,
       owner: 'Windeal',
       repo: 'windeal.github.io',
       oauth: {
