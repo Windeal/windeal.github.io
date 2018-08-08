@@ -206,7 +206,23 @@ io2(right)-&gt;op3
          </a>
      </li>
 </ul>
-</section>
+</section><link rel="stylesheet" href="/theme/css/gitment.css" type="text/css"/>
+<script src="/theme/js/gitment.js"></script>
+
+<div id="gitment"></div>
+
+<script>
+    var gitment = new Gitment({
+      // id: '页面 ID', // 可选。默认为 location.href
+      owner: 'Windeal',
+      repo: 'windeal.github.io',
+      oauth: {
+        client_id: 'd57ae4603c3df6695187',
+        client_secret: '98e679d69ec2ce81ce7f66523952806d59e61d35',
+      },
+    })
+    gitment.render('gitment')
+</script>
    <!--页面主题内容-->
         </div>
         <div class="col-sm-3" id="sidebar">
