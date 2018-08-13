@@ -1,0 +1,271 @@
+<!--processed for each article-->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title>常用数据结构知识点整理——树 - Windeal's Home</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--上述3个meta标签**必须**放在前面，任何其他内容都**必须**跟随其后-->
+
+        <meta name="author" content="windealli" />
+        <meta name="keywords" content="树,二叉树,红黑树" />
+        <meta name="description" content="树作为常用的数据结构经常应用在有大量输入数据的场景。树有许多进一步的分类：二叉树、平衡二叉树、AVL树、二叉搜索树、B树、红黑树等。" />
+
+    <!-- Bootstrap -->
+		<!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.min.css" type="text/css"/>
+		<!-- Bootstrap theme -->
+		<link href="/theme/css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<!--百度统计-->
+<!--百度统计-->
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?ebe135bbd1292a4b3b8d4a0b3406c42a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	<!--百度站长平台-->
+	<meta name="baidu-site-verification" content="GYyFYVIoFx" />
+	
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <a href="/" class="navbar-brand">
+Windeal's Home            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="/">我的博客</a></li>
+                    <li><a href="/categories.html">分类目录</a></li>
+                    <li><a href="/pages/aboutme.html">关于博主</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/archives.html"><i class="fa fa-th-list"></i><span class="icon-label">Archives</span></a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</nav> <!-- /.navbar -->
+
+
+<div class="container theme=showcase" role='main' style="margin-top:50px;">
+    <div class="row">
+		<div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/brief_intro_tree.html"
+                       rel="bookmark"
+                       title="Permalink to 常用数据结构知识点整理——树">
+                        常用数据结构知识点整理——树
+                    </a>
+                </h1>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        windealli
+    </span>
+  </span>
+  <time datetime="2018-08-13T11:34:05+08:00" pubdate>
+	  周一 13 八月 2018
+  </time>
+  <span class="categories"><a class='category' href='/category/algorithm.html'>algorithm</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/shu.html">树</a>,    <a class="category" href="/tag/er-cha-shu.html">二叉树</a>,    <a class="category" href="/tag/hong-hei-shu.html">红黑树</a>  </span>
+</p>            </header>
+            <div class="entry-content">
+                <h3>树</h3>
+<h4>树的概念</h4>
+<p>树可以有多种定义方式，常见的是采用递归定义：</p>
+<ol>
+<li>一棵树是一些节点的集合。</li>
+<li>节点集合可以是空集。</li>
+<li>如果结合非空，则选一个节点作为根节点（root）；其他节点分为n（n&gt;=0）个互不相交的子集。每个子集本身又是一棵树，作为根节点的子树。</li>
+</ol>
+<h4>为什么要有树</h4>
+<p>树是一种非线性的数据结构。</p>
+<p>对于大量的输入数据，链表等线性结构的访问效率太慢，不宜使用。</p>
+<h4>其他知识点</h4>
+<h3>二叉树</h3>
+<h4>为什么二叉树会是较常见的树</h4>
+<ol>
+<li>树本身每个节点可能有0-n个孩子，在实际场景中n的个数是不确定的。而且每个节点的孩子树也是不确定的。</li>
+<li>使用n（n&gt;2）叉树的话，在程序设计中可能会造成空间浪费。</li>
+<li>n（n&gt;2）叉树都可以转换为二叉树。（通过把右兄弟转化为右孩子）</li>
+<li>二叉树有极高的空间利用率。</li>
+</ol>
+<h4>二叉树的遍历</h4>
+<p>二叉树有以下遍历策略：</p>
+<ul>
+<li><strong>先序遍历：</strong> 常用于有序二叉树的查找。</li>
+<li><strong>中序遍历：</strong> 一般二叉树才有。可用于表达式树。（其他策略也能用于表达式树）</li>
+<li><strong>后序遍历：</strong> 可以用于统计。如目录树，统计每个目录的大小。（先统计子目录，在加起来）</li>
+<li><strong>层级遍历：</strong> 可以用栈实现，不过空间开销大，不常用。</li>
+</ul>
+<h3>二叉查找树</h3>
+<h4>什么是二叉查找树</h4>
+<p>二叉查找树是有序的二叉树。</p>
+<p>它有如下性质：</p>
+<p>对于树种的任意节点X， 其左子树中的所有节点的关键字值都小于X的关键字值；其右节点中所有节点的关键字值都大于X的关键字值。（先不考虑关键字值相等的节点）</p>
+<h4>时间复杂度</h4>
+<p>平均复杂度：O（log N）</p>
+<h3>AVL树—平衡二叉树</h3>
+<p>AVN树有如下性质：</p>
+<p>左子树和右子树都是平衡二叉树，且左子树和右子树的深度之差的绝对值不超过1。</p>
+<p>AVL树在insert和delete操作时，有可能需要通过旋转来使得树重新平衡。</p>
+<h3>伸展树</h3>
+<p>伸展树其实并不是一般意义上的数据结构，而是一种动态变化的算法思想。</p>
+<p>伸展树的基本想法是：当一个基点倍访问后，它就要经过一系列AVL的旋转，被放到根上。</p>
+<h4>伸展树的意义</h4>
+<p>伸展树相对于普通的二叉树更加具有现实意义。（伸展树有一定程度上的只能元素）</p>
+<p>当一个节点被访问时，其大概率会短时间内被继续访问。（比如，大家可能在同一端时间内都搜索某一支音乐，某段视频）。 如果使用的是普通二叉树，且该节点不幸被存储在叶子节点上，那么久可能频繁出现访问时间都是最坏的场景。</p>
+<h3>B树</h3>
+<h4>什么是B树</h4>
+<p>阶为M的B树是一颗具有以下结构性质的树：</p>
+<ol>
+<li>每个节点之多有M个子节点</li>
+<li>树的根要么是树叶，要么至少2个子节点</li>
+<li>除了树根外，所有非树叶节点至少有M/2个子节点</li>
+<li>所有的树叶都在相同的深度上。</li>
+<li>所有数据存储在叶子节点上</li>
+</ol>
+<p>B树的实现是比较复杂的，既要保证树叶在相同深度上，也要保证非树叶节点的儿子数在M/2和M之间。</p>
+<p>B树的M值为N（总节点数）时，其实就类似于线性表了。</p>
+<h4>B树的优缺点</h4>
+<p>相比二叉查找树B树有如下优缺点：</p>
+<ul>
+<li><strong>优点：</strong> B树是多叉树，树的深度较低。查找是需要路过的节点少。</li>
+<li><strong>缺点：</strong>为了找到对应的子节点，需要对节点内部的关键码先进行查找（这个操作的效率是O（N））。会有一定的空间浪费。</li>
+</ul>
+<h4>B树的意义（什么时候需要B树）</h4>
+<p>前面提到了B的是优缺点，总结起来就是：<strong>B树在查找时，需要路过的子节点少，但是一个节点内部处理的时间较长。</strong></p>
+<p>B树主要应用在数据库系统（或其他把树存储在磁盘的系统）。此时，B树的每个节点存储在一个磁盘块中。磁盘IO每次可以把一个磁盘块读取到内存。此时，节点内部关键码的处理（查找）不涉及磁盘IO。 也就是说，每次路过一个子节点，就要进行一次磁盘IO，而节点内部的处理只涉及内存。我们知道，磁盘IO比内存的运行要慢几个数量级。因而在这种情况下，节点内部的处理时间其实可以忽略不计。</p>
+<h4>M值的选择</h4>
+<ol>
+<li>如果只关心主存的运行速度，M值选择M=3或M=4较合适。否则，节点内部查找时间过长。</li>
+<li>如果B树存储在磁盘，则M应该选择一个使得：每个节点都能装入一个磁盘块的最大值。</li>
+</ol>
+<h3>红黑树</h3>
+<h4>什么是红黑树</h4>
+<p>红黑树在二叉查找树的基础上增加了如下约束：</p>
+<ol>
+<li>节点是红色或黑色。</li>
+<li>根和叶子是黑色</li>
+<li>每个红色节点必须有两个黑色子节点</li>
+<li>从任一节点到每个叶子的所有简单路径都包含相同的黑色节点。</li>
+</ol>
+<h4>红黑树的意义</h4>
+<p>红黑树的设计目标与二叉平衡树有点类似，都是为了提供良好的<strong>最坏情况</strong>运行时间。（AVL树的最大深度和最小深度相差不超过1， 而红黑树则是最大深度不超过最小深度的2倍）</p>
+<p>红黑树降低了平衡二叉树在插入和删除时所需的节点旋转开销（可以使用颜色变更来取代平衡二叉树中的部分旋转工作）。</p>
+<p>红黑树相当于在AVL上上适当放松了一些约束条件。</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+	
+<!--邻居导航-->
+<section>
+ <ul>
+     <li> 上一篇：
+         <a href="/kernel_mode_user_mode_fileio.html">
+             内核态与用户态、系统调用与库函数、文件IO与标准IO等概念小结
+         </a>
+     </li>
+</ul>
+</section><link rel="stylesheet" href="/theme/css/gitment.css" type="text/css"/>
+<script src="/theme/js/gitment.js"></script>
+
+<div id="gitment"></div>
+
+<script>
+    var issue_id = window.location.pathname.split('/').pop();
+    var gitment = new Gitment({
+      // id: '页面 ID', // 可选。默认为 location.href
+      id: issue_id,
+      owner: 'Windeal',
+      repo: 'windeal.github.io',
+      oauth: {
+        client_id: 'd57ae4603c3df6695187',
+        client_secret: '98e679d69ec2ce81ce7f66523952806d59e61d35',
+      },
+    })
+    gitment.render('gitment')
+</script>
+   <!--页面主题内容-->
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div>
+
+<section>
+<h2>最新文章</h2>
+<ul id="recent_posts">
+  <li class="post">
+	  <a href="/brief_intro_tree.html">常用数据结构知识点整理——树</a>
+  </li>
+  <li class="post">
+	  <a href="/kernel_mode_user_mode_fileio.html">内核态与用户态、系统调用与库函数、文件IO与标准IO等概念小结</a>
+  </li>
+  <li class="post">
+	  <a href="/sync_async_nonblock.html">同步异步与阻塞非阻塞</a>
+  </li>
+  <li class="post">
+	  <a href="/update_gcc_to_support_cpp11.html">gcc升级的简单方法</a>
+  </li>
+  <li class="post">
+	  <a href="/use_curl_to_test_http2.html">使用curl进行http2测试</a>
+  </li>
+</ul>
+</section><!--相关文章-->
+
+<section>
+</section>
+
+
+</div>            </aside>
+        </div>
+    </div>
+
+<!--页面底部-->
+
+<footer class='footer' style="margin-top:100px">
+  <p>
+		Copyright &copy;  2017&ndash;2018  Windeal
+  </p>
+</footer></div>
+
+	<!--百度站长平台-->
+<!--百度站长-->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+	<script src="/theme/js/bootstrap.js"></script>
+	<script src="/theme/js/bootstrap.min.js"></script>
+	<script src="/theme/js/npm.js"></script>
+
+</body>
+</html>
