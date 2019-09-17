@@ -23,15 +23,14 @@
 <!--百度统计-->
 
 <script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?ebe135bbd1292a4b3b8d4a0b3406c42a";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-	<!--百度站长平台-->
+  var _hmt = _hmt || [];
+  (function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?30921d7c7267c76ab4888045ddc2db8a";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>	<!--百度站长平台-->
 	<meta name="baidu-site-verification" content="GYyFYVIoFx" />
 	
 
@@ -79,7 +78,7 @@ Windeal's Home            </a>
     </span>
   </span>
   <time datetime="2017-03-05T19:00:44+08:00" pubdate>
-	  周日 05 三月 2017
+	  日 05 三月 2017
   </time>
   <span class="categories"><a class='category' href='/category/protocol.html'>protocol</a>
   </span>
@@ -127,16 +126,16 @@ Windeal's Home            </a>
 <h4>密码、密码机、密钥</h4>
 <p><strong>密码</strong>是一套编码方案，包含报文的<strong>编码方式</strong>和<strong>解码方式</strong>两部分。</p>
 <p>未加密的报文我们称之为<strong>明文</strong>， 编码加密之后的报文称之为<strong>密文</strong>。</p>
-<div class="highlight"><pre><span></span>op1=&gt;operation: 明文 
-op2=&gt;operation: 密文
-op3=&gt;operation: 明文
-io1=&gt;inputoutput: 编码器
-io2=&gt;inputoutput: 解码器
+<div class="highlight"><pre><span></span><span class="n">op1</span><span class="o">=&gt;</span><span class="k">operation</span><span class="p">:</span> <span class="err">明文</span> 
+<span class="n">op2</span><span class="o">=&gt;</span><span class="k">operation</span><span class="p">:</span> <span class="err">密文</span>
+<span class="n">op3</span><span class="o">=&gt;</span><span class="k">operation</span><span class="p">:</span> <span class="err">明文</span>
+<span class="n">io1</span><span class="o">=&gt;</span><span class="n">inputoutput</span><span class="p">:</span> <span class="err">编码器</span>
+<span class="n">io2</span><span class="o">=&gt;</span><span class="n">inputoutput</span><span class="p">:</span> <span class="err">解码器</span>
 
-op1(right)(加密)-&gt;io1
-io1(right)-&gt;op2
-op2(right)-&gt;io2
-io2(right)-&gt;op3
+<span class="n">op1</span><span class="p">(</span><span class="k">right</span><span class="p">)(</span><span class="err">加密</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">io1</span>
+<span class="n">io1</span><span class="p">(</span><span class="k">right</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">op2</span>
+<span class="n">op2</span><span class="p">(</span><span class="k">right</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">io2</span>
+<span class="n">io2</span><span class="p">(</span><span class="k">right</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">op3</span>
 </pre></div>
 
 
@@ -206,25 +205,7 @@ io2(right)-&gt;op3
          </a>
      </li>
 </ul>
-</section><link rel="stylesheet" href="/theme/css/gitment.css" type="text/css"/>
-<script src="/theme/js/gitment.js"></script>
-
-<div id="gitment"></div>
-
-<script>
-    var issue_id = window.location.pathname.split('/').pop();
-    var gitment = new Gitment({
-      // id: '页面 ID', // 可选。默认为 location.href
-      id: issue_id,
-      owner: 'Windeal',
-      repo: 'windeal.github.io',
-      oauth: {
-        client_id: 'd57ae4603c3df6695187',
-        client_secret: '98e679d69ec2ce81ce7f66523952806d59e61d35',
-      },
-    })
-    gitment.render('gitment')
-</script>
+</section>
    <!--页面主题内容-->
         </div>
         <div class="col-sm-3" id="sidebar">
@@ -234,9 +215,6 @@ io2(right)-&gt;op3
 <section>
 <h2>最新文章</h2>
 <ul id="recent_posts">
-  <li class="post">
-	  <a href="/brief_intro_tree.html">常用数据结构知识点整理——树</a>
-  </li>
   <li class="post">
 	  <a href="/kernel_mode_user_mode_fileio.html">内核态与用户态、系统调用与库函数、文件IO与标准IO等概念小结</a>
   </li>
@@ -248,6 +226,9 @@ io2(right)-&gt;op3
   </li>
   <li class="post">
 	  <a href="/use_curl_to_test_http2.html">使用curl进行http2测试</a>
+  </li>
+  <li class="post">
+	  <a href="/brief_intro_htt2.html">HTTP2 入门</a>
   </li>
 </ul>
 </section><!--相关文章-->
