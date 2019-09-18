@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>gcc升级的简单方法 &mdash; Windeal's Home</title>
+  <meta name="author" content="Windeal">
+
+
+
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.png" rel="icon">
+
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Windeal's Home</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
+
+
+<ul class="main-navigation">
+    <li><a href="/">我的博客</a></li>
+    <li><a href="/categories.html">分类目录</a></li>
+    <li><a href="/pages/aboutme.html">关于博主</a></li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">gcc升级的简单方法</h1>
+    <p class="meta">
+<time datetime="2017-06-16T00:00:00+08:00" pubdate>五 16 六月 2017</time>    </p>
+</header>
+
+  <div class="entry-content"><h2>gcc 升级</h2>
+<p>升级gcc目前知道两种方法</p>
+<ul>
+<li>直接编译安装新版本的gcc （目测前方坑很多）</li>
+<li>安装devtoolset来升级gcc， （网上说这种方式很简单）</li>
+</ul>
+<p>下面通过devtoolset来升级下gcc devtoolset目前有4个版本:devtoolset-1.1 devtoolset-2 devtoolset-3 devtoolset-4， 以上版本分别对应gcc的版本为4.7、4.8、4.9、5.2。</p>
+<p>gcc 4.8好像就完全支持C++11了， 安全起见，我打算安装gcc 4.9 下面是升级步骤</p>
+<div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">centos</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">scl</span><span class="o">-</span><span class="n">rh</span> <span class="n">centos</span><span class="o">-</span><span class="n">release</span><span class="o">-</span><span class="n">scl</span>
+<span class="n">yum</span> <span class="k">check</span><span class="o">-</span><span class="k">update</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="n">devtoolset</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">gcc</span>  <span class="n">devtoolset</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">gcc</span><span class="o">-</span><span class="k">c</span><span class="o">++</span>
+</pre></div>
+
+
+<p>升级之后需要启动devtoolset：</p>
+<p><code>source /opt/rh/devtoolset-3/enable</code>测试发现当前命令似乎只对本次shell有效，所以可能需要把这条命令加入到~/.bashrc中。</p>
+<p>接下来可以通过<code>gcc -v</code>查看是否更新完毕。</p></div>
+    <footer>
+<!--上一篇 下一篇-->
+ <ul>
+     <li>
+         <a href="/use_curl_to_test_http2.html">上一篇：使用curl进行http2测试</a>
+     </li>
+     <li>
+         <a href="/sync_async_nonblock.html"> 下一篇：同步异步与阻塞非阻塞</a>
+     </li>
+</ul> <!--上一篇 下一篇-->
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        windealli
+    </span>
+  </span>
+<time datetime="2017-06-16T00:00:00+08:00" pubdate>五 16 六月 2017</time>  <span class="categories">
+    <a class='category' href='/category/tools.html'>tools</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/gcc.html">gcc</a>,    <a class="category" href="/tag/c11.html">C++11</a>  </span>
+</p><div class="sharing">
+</div>	</footer>
+  </article>
+
+
+</div>
+<aside class="sidebar">
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/kernel_mode_user_mode_fileio.html">内核态与用户态、系统调用与库函数、文件IO与标准IO等概念小结</a>
+      </li>
+      <li class="post">
+          <a href="/sync_async_nonblock.html">同步异步与阻塞非阻塞</a>
+      </li>
+      <li class="post">
+          <a href="/update_gcc_to_support_cpp11.html">gcc升级的简单方法</a>
+      </li>
+      <li class="post">
+          <a href="/use_curl_to_test_http2.html">使用curl进行http2测试</a>
+      </li>
+      <li class="post">
+          <a href="/brief_intro_htt2.html">HTTP2 入门</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+<li><a href="/category/background.html">后台开发</a> (2)<br> </li>  
+<li><a href="/category/protocol.html">协议</a> (3)<br> </li>  
+<li><a href="/category/tools.html">工具与环境</a> (1)<br> </li>  
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+<style>
+ul.tagcloud {
+  list-style: none;
+    padding: 0;
+}
+
+ul.tagcloud li {
+    display: inline-block;
+}
+
+li.tag-1 {
+    font-size: 150%;
+}
+
+li.tag-2 {
+    font-size: 120%;
+}
+
+...
+
+ul.tagcloud .list-group-item <span>.badge {
+    background-color: grey;
+    color: white;
+}
+</style>
+
+<ul class="tagcloud">
+</ul>
+  </section>
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2017&ndash;2018  Windeal &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+<!--自动推送网站链接 给百度-->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script><!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?cec6991a70bb6ec4201ff2468576844a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!--上一篇 下一篇-->
+ <ul>
+ {% if article.prev_article %}
+     <li>
+         <a href="{{ SITEURL }}/{{ article.prev_article.url}}">上一篇：{{ article.prev_article.title }}</a>
+     </li>
+ {% endif %}
+ {% if article.next_article %}
+     <li>
+         <a href="{{ SITEURL }}/{{ article.next_article.url}}"> 下一篇：{{ article.next_article.title }}</a>
+     </li>
+ {% endif %}
+</ul>

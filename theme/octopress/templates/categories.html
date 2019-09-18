@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Categories &mdash; {{ SITENAME }}{% endblock %}
+{% block content %}
+<div>
+	<article role="article">
+    	<header>
+    		<h1 class="entry-title">Blog Categories</h1>
+    	</header>
+
+	<p>
+	{% for category, articles in categories|sort %}
+	 	{%- if MY_CATEGORY_MAP and MY_CATEGORY_MAP[category.name] -%}
+			  {%- set my_cat_name = MY_CATEGORY_MAP[category.name][0] -%}
+			  {%- set my_cat_icon = MY_CATEGORY_MAP[category.name][1] -%}
+		{%- else -%}
+			  {%- set my_cat_name = category.name -%}
+			  {%- set my_cat_icon = "icon-folder-open" -%}
+		{%- endif -%}
+		<a href="{{ SITEURL }}/{{ category.url }}">{{ my_cat_name }}</a> ({{ articles|count }})<br>
+	{% endfor %}
+	</p>
+	</article>
+</div>
+{% endblock %}

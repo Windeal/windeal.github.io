@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} - {{ SITENAME }}{% endblock %}
+{% block meta %}
+    <meta name="author" content="{{ AUTHOR }}" />
+    <meta name="keywords" content="{{ category }}" />
+{% endblock %}
+
+{% block content %}
+	<ul class="list-group" style="margin-top:50px">
+		{% for article in articles %}
+			<li class="list-group-item"> 
+				<h4><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h4>
+				{% include 'includes/article_info.html' %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

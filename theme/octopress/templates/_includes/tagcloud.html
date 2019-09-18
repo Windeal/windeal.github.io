@@ -1,0 +1,34 @@
+<style>
+ul.tagcloud {
+  list-style: none;
+    padding: 0;
+}
+
+ul.tagcloud li {
+    display: inline-block;
+}
+
+li.tag-1 {
+    font-size: 150%;
+}
+
+li.tag-2 {
+    font-size: 120%;
+}
+
+...
+
+ul.tagcloud .list-group-item <span>.badge {
+    background-color: grey;
+    color: white;
+}
+</style>
+
+<ul class="tagcloud">
+	{% for tag in tag_cloud %}
+		<li class="tag-{{ tag.1 }}">
+			<a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}{% if TAG_CLOUD_BADGE %}<span class="badge">{{ tag.2 }}</span>{% endif %}</a>
+		</li>
+	{% endfor %}
+</ul>
+

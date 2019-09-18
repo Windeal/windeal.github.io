@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>HTTP2 入门 &mdash; Windeal's Home</title>
+  <meta name="author" content="Windeal">
+
+
+
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="/favicon.png" rel="icon">
+
+  <link href="/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="/">Windeal's Home</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
+
+
+<ul class="main-navigation">
+    <li><a href="/">我的博客</a></li>
+    <li><a href="/categories.html">分类目录</a></li>
+    <li><a href="/pages/aboutme.html">关于博主</a></li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">HTTP2 入门</h1>
+    <p class="meta">
+<time datetime="2017-05-26T19:00:44+08:00" pubdate>五 26 五月 2017</time>    </p>
+</header>
+
+  <div class="entry-content"><h2>什么是HTTP/2</h2>
+<p>HTTP/2是HTTP协议的新版本，是下一代的HTTP协议。</p>
+<p>HTTP/2由IETF（互联网工程任务组）的Hypertext Transfer Protocol Bis工作小组进行开发。 是自1999年HTTP1.1发布后的首个更新。</p>
+<h2>HTTP/2 与 HTTP1.1、SPDY是什么关系</h2>
+<p>HTTP/2是HTTP/1.1的更新版本，HTTP/2是HTTP/1.1的下一代版本。</p>
+<p>SPDY是Google开发的基于TCP的传输层协议，并不是正式的HTTP协议，不是用来替代HTTP某个版本的协议，而是对HTTP/1.1协议的增强。由于SPDY协议的良好表现，研究HTTP协议的工作小组才开始讨论、并最终确定开发新一代的HTTP协议（即HTTP/2)。HTTP/2是基于SPDY/2开发的。</p>
+<h2>为什么要有HTTP/2</h2>
+<p>我们知道，HTTP/1.1已经在Web上使用了十五年以上，在全世界已经得到广泛应用。那么为什么又要制定HTTP/2呢？ 可已从方面进行分析：</p>
+<ul>
+<li><strong>Web传输需求的增长：</strong></li>
+<li><strong>HTTP/1.1本身的瓶颈：</strong>
+这两个方面是相互影响的。</li>
+</ul>
+<h3>Web传输需求的增长</h3>
+<p>相比之前，现今Web页面变得更加的资源密集（也就是一个页面上的资源更多了、更复杂了），需要更先进的技术来高效地加载这些页面。</p>
+<h3>HTTP/1.1本身的瓶颈</h3>
+<p>HTTP/1.1的HOL问题（head-of-line) HTTP/1.1中，每个TCP连接只能允许存在一个未决的HTTP请求。如果前面的请求因为某些原因不能收到应答，后面的请求也就没办法发送。</p>
+<p>过多的并行连接有可能影响性能 一方面，过多的TCP连接会由于拥塞控制破坏性能和网络环境， 另一方面，浏览器发起过多并发连接会导致（共享）网络资源的使用不公平（其它应用只能得到更能少的网络资源）。</p>
+<p>大量的请求也意味着有很多冗余的（复制）的报文在网络线路上。</p>
+<h2>HTTP/2 有哪些特点</h2>
+<p>这里主要通过对比HTTP/2与HTTP/1.1的主要区别来介绍HTTP/2的特点</p>
+<ul>
+<li>HTTP/2使用二进制代替HTTP/1.1的文本来传输数据。</li>
+<li>HTTP/2 采用完全的多路复用，而HTTP/1.1使用有序、阻塞的方式工作</li>
+<li>HTTP/2在单条连接上实现并发（多路复用的结果）</li>
+<li>HTTP/2实现了头部压缩</li>
+<li>HTTP/2允许Server Push，Server可以主动push内容给client的缓存。</li>
+<li>HTTP/2 二进制传输数据</li>
+<li>HTTP/2 采用二进制（而不是文本）的方式传输数据，那么采用二进制传输数据有什么优势？</li>
+</ul>
+<h3>二进制传输数据的优势</h3>
+<ul>
+<li>数据解析更加高效</li>
+<li>在网络线路上的数据更加紧凑</li>
+<li>出错更少</li>
+</ul>
+<p>这些优势主要是因为基于二进制的协议通常在处理空格、数据长度、字符大小写、行结束符、空行等方面更加便利。</p>
+<p>HTTP/1.1 解析一条message可能有<a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.4">四条路线</a>, 但HTTP/2只有一条。</p>
+<p>不过HTTP/2需要依赖工具才能在telnet上传输。</p>
+<h3>HTTP/2 的多路复用</h3>
+<p>HTTP/2的多路复用机制可以帮助解决HTTP/1.x的HOL问题。</p>
+<p>尽管HTTP/1.1试图通过pipeline机制解决HOL问题，但在许多场景下pipeline并不能达到预期的效果，而且中间链路上的节点可能并不支持pipeline。</p>
+<p>HTTP/2的多路复用机制允许多个请求和应答同时在一条TCP连接上运行.</p>
+<h3>HTTP/2 采用单条连接</h3>
+<p>对于HTTP/1.x协议，浏览器会为每个源站打开4~8条连接，而现在许多网页通常使用了多个源站的内容，这就意味着加载一个页面可能打开几十条的TCP连接。一个应用程序同时打开这么多的连接破坏了TCP的默认设定，会有缓冲去过载的风险，进而引起阻塞和重传。</p>
+<p>此外，一个应用程序同时打开这么多的连接，导致了网络资源的垄断。窃取了其他原本能够良好运作的应用程序所需要的网络资源。</p>
+<h3>HTTP/2 头部压缩</h3>
+<p>HTTP的首部如果不经压缩直接传输，将会消耗很大的网络开销： 假设一个页面有80个资源（对于今天的Web来说已经比较保守的估计了），且每个请求有1400字节的头部（由于Cookies、Refer等的存在，这并不少见）。这可能花费至少7~8次往返来把这些首部发送到网络线路上，这还没有把应答时间计算在内，仅仅是从client上去除来的时间）。</p>
+<p>由于TCP的满启动机制，发送多少packets到新的连接上是基于多少packets被确认了， 最初的往返能发送的packets会收到更大的限制。</p>
+<p>作为对比，温和的首部压缩允许这些请求能够在一次往返、甚至一个packet上处理这些请求。</p>
+<p>首部压缩的作用在移动客户端上尤其明显，在移动设备上即使是良好的网络环境，每次round-trip也经常会有几百毫秒的延迟。</p>
+<h3>HTTP/2 Server Push</h3>
+<p>为什么要有Server Push：</p>
+<p>当浏览器请求一个页面，Server在应答中发送HTML作为应答。通常，这些HTML并不是完整页面，里面还会有一些内嵌资源（如Javascript、image、CSS等），这些资源需要浏览器对HTML进行解析，然后为每个资源发起请求，Server才会发送给浏览器。 如果浏览器在加载页面的第一个请求返回HTML后，能主动把HTML中所需的内嵌资源推送给客户端，就可以减少一大部分网络开销。</p>
+<h4>Server Push的功能</h4>
+<p>Server Push允许Server主动推送它认为客户端会需要的资源给客户端，而不必等待客户端发起请求。</p>
+<p>然而，Server Push功能如果没有妥善使用，可能会对性能产生一定的影响。</p>
+<h2>参考文献：</h2>
+<p><a href="https://http2.github.io/faq/#general-questions">HTTP/2 Frequently Asked Questions</a></p></div>
+    <footer>
+<!--上一篇 下一篇-->
+ <ul>
+     <li>
+         <a href="/understand_https.html">上一篇：深入浅出HTTPS</a>
+     </li>
+     <li>
+         <a href="/use_curl_to_test_http2.html"> 下一篇：使用curl进行http2测试</a>
+     </li>
+</ul> <!--上一篇 下一篇-->
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">
+        windealli
+    </span>
+  </span>
+<time datetime="2017-05-26T19:00:44+08:00" pubdate>五 26 五月 2017</time>  <span class="categories">
+    <a class='category' href='/category/protocol.html'>protocol</a>
+  </span>
+  <span class="categories">
+    <a class="category" href="/tag/http2.html">Http2</a>,    <a class="category" href="/tag/http.html">http</a>  </span>
+</p><div class="sharing">
+</div>	</footer>
+  </article>
+
+
+</div>
+<aside class="sidebar">
+
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="/kernel_mode_user_mode_fileio.html">内核态与用户态、系统调用与库函数、文件IO与标准IO等概念小结</a>
+      </li>
+      <li class="post">
+          <a href="/sync_async_nonblock.html">同步异步与阻塞非阻塞</a>
+      </li>
+      <li class="post">
+          <a href="/update_gcc_to_support_cpp11.html">gcc升级的简单方法</a>
+      </li>
+      <li class="post">
+          <a href="/use_curl_to_test_http2.html">使用curl进行http2测试</a>
+      </li>
+      <li class="post">
+          <a href="/brief_intro_htt2.html">HTTP2 入门</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+<li><a href="/category/background.html">后台开发</a> (2)<br> </li>  
+<li><a href="/category/protocol.html">协议</a> (3)<br> </li>  
+<li><a href="/category/tools.html">工具与环境</a> (1)<br> </li>  
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+<style>
+ul.tagcloud {
+  list-style: none;
+    padding: 0;
+}
+
+ul.tagcloud li {
+    display: inline-block;
+}
+
+li.tag-1 {
+    font-size: 150%;
+}
+
+li.tag-2 {
+    font-size: 120%;
+}
+
+...
+
+ul.tagcloud .list-group-item <span>.badge {
+    background-color: grey;
+    color: white;
+}
+</style>
+
+<ul class="tagcloud">
+</ul>
+  </section>
+
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2017&ndash;2018  Windeal &mdash;
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+  <script src="/theme/js/modernizr-2.0.js"></script>
+  <script src="/theme/js/ender.js"></script>
+  <script src="/theme/js/octopress.js" type="text/javascript"></script>
+<!--自动推送网站链接 给百度-->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+  bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script><!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?cec6991a70bb6ec4201ff2468576844a";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
